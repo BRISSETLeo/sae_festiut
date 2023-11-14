@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    {% block head %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block styles %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}">
+    {% endblock %}
+    <title>FestIUT'O</title>
+    {% endblock %}
+  </head>
+  <body>
+    <header>
+        <a href="#" class="logo">Mon Festival</a>
+        <button class="login-button">Connexion</button>
+    </header>
+    <main class="main">
+      {% block content %}
+      {% endblock %}
+    </main>
+  </body>
+</html>

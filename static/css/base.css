@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+header {
+    background-color: #3498db; /* Couleur de fond */
+    padding: 15px;
+    display: flex;
+    justify-content: space-between; /* Aligne les éléments à l'extrémité des deux côtés */
+    align-items: center; /* Centre les éléments verticalement */
+}
+
+.logo {
+    color: #fff; /* Couleur du texte du logo */
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-button {
+    background-color: #e74c3c; /* Couleur du bouton de connexion */
+    color: #fff; /* Couleur du texte du bouton */
+    padding: 14px 28px;
+    font-size: 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out; /* Animations de transition pour le survol */
+}
+
+.login-button:hover {
+    background-color: #c0392b; /* Nouvelle couleur au survol */
+    transform: scale(1.1); /* Effet d'agrandissement */
+}

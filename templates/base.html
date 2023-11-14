@@ -14,7 +14,7 @@
   <body>
     <header>
         <a href="#" class="logo">Mon Festival</a>
-        <button class="login-button">Connexion</button>
+        <a href="{{ url_for('connexion') }}"><button class="login-button">Connexion</button></a>
     </header>
     <main class="main">
       {% block content %}

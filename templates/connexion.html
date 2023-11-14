@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/connexion.css')}}"> 
+{% endblock %}
+{% block content %}
+
+<div class="login-container">
+    <h2>Connexion</h2>
+    <form method="post" action="{{ url_for('connexion') }}">
+        <label for="utilisateur">Utilisateur:</label>
+        <input type="text" id="utilisateur" name="utilisateur" required><br>
+
+        <label for="mot_de_passe">Mot de passe:</label>
+        <input type="password" id="mot_de_passe" name="mot_de_passe" required><br>
+
+        <input type="submit" value="Se connecter">
+    </form>
+    <p>{{ message }}</p>
+</div>
+{% endblock %}

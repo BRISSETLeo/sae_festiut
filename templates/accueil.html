@@ -4,5 +4,24 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/accueil.css')}}"> 
 {% endblock %}
 {% block content %}
-<h1>BONJOUE</h1>
+<article>
+    <div class="image-container">
+        <img src="./static/images/images.jpeg" alt="Impossible">
+    </div>
+    <p>Ici il y aura une description du festival et pourquoi pas une image en fond un peu flouté</p>
+</article>
+<section class="festival-tickets-container">
+{% for billet in billets %}
+<section class="festival-ticket">
+    <h2>{{ billet[1] }}</h2>
+    <p>{{ billet[2] }}</p>
+    <div class="ticket-details">
+        <p>Date: {{ billet[3] }}</p>
+        <p>Lieu: {{ billet[4] }}</p>
+        <p>Prix: {{ billet[5] }}</p>
+    </div>
+    <button class="buy-ticket-button">Acheter un Billet</button>
+</section>
+{% endfor %}
+</section>
 {% endblock %}

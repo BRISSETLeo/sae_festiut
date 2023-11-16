@@ -48,7 +48,7 @@ CREATE TABLE UTILISATEUR (
   id_utilisateur INT NOT NULL,
   nom_user VARCHAR(255),
   tel VARCHAR(255),
-  adresse VARCHAR(255),
+  mail VARCHAR(255),
   age INT,
   mot_de_passe VARCHAR(255),
   id_role INT NOT NULL,

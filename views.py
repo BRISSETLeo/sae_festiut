@@ -6,15 +6,19 @@ from flask import request, redirect, url_for
 # accueil
 @app.route('/')
 def accueil():
+    cursor = models.get_cursor()
+    billet = models.liste_billets(cursor)
     return render_template(
         "accueil.html",
-        billets = [(0,"Nom du billet", "Description du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est goodDescription du billet admettons le texte est un peu trop grand pour cette page à quel moment je pourrais voir si c'est good ou non ?", "18/03/2024", "Saint Jacques le moine", "$50000"),(1,"Nom du billet2", "Description du billet2", "18/03/2025", "Saint Jacques le moine2", "$100")]
+        billet = billet
     )
 
 @app.route('/connexion')
 def connexion():
+    utilisateur = models.liste_utilisateurs()
     return render_template(
-        "connexion.html"
+        "connexion.html",
+        utilisateur = utilisateur
     )
 
 @app.route('/inscription')
@@ -32,4 +36,18 @@ def save_inscription():
     cursor = models.get_cursor()
     models.save_inscription(nom, tel, email, mdp)
     models.close_cursor(cursor)
+    return redirect(url_for('accueil'))
+
+@app.route('/verif_connexion', methods=("POST",))
+def verif_connexion():
+    email = request.form['email']
+    mdp = request.form['mot_de_passe']
+    cursor = models.get_cursor()
+    utilisateur = models.verif_connexion(email, mdp)
+    models.close_cursor(cursor)
+    if utilisateur :
+        print("Connexion réussie")
+        print(utilisateur)
+    else :
+        print("Connexion échouée")
     return redirect(url_for('accueil'))

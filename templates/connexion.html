@@ -7,9 +7,9 @@
 
 <div class="login-container">
     <h2>Connexion</h2>
-    <form method="post" action="{{ url_for('connexion') }}">
-        <label for="utilisateur">Utilisateur:</label>
-        <input type="text" id="utilisateur" name="utilisateur" required><br>
+    <form method="post" action="{{ url_for('verif_connexion') }}">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required><br>
 
         <label for="mot_de_passe">Mot de passe:</label>
         <input type="password" id="mot_de_passe" name="mot_de_passe" required><br>

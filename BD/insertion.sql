@@ -54,6 +54,7 @@ INSERT INTO BILLET (id_billet, prix_billet, description_billet, type_billet, id_
 (2, 30.00, 'Billet VIP', 'VIP', 1),
 (3, 10.00, 'Billet enfant', 'ENFANT', 1);
 
+
 -- SPECTATEUR
 INSERT INTO SPECTATEUR (id_spectateur, id_billet, id_utilisateur) VALUES
 (1, 1, 1),

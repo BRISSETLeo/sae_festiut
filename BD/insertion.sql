@@ -32,9 +32,9 @@ INSERT INTO EVENEMENT (id_event, capacite, est_gratuit) VALUES
 
 -- BILLET_TYPE
 INSERT INTO BILLET_TYPE (type_billet, nom_billet) VALUES
-('1jour', 'Billet journée');,
-('2jours', 'Billet 2 jours');,
-('FestivalComplet', 'Billet ');
+('1jour', 'Billet journée'),
+('2jours', 'Billet 2 jours'),
+('FestivalComplet', 'Billet');
 
 -- LIEN_RESEAU
 INSERT INTO LIEN_RESEAU (id_lien_reseau, reseau_lien) VALUES
@@ -43,16 +43,17 @@ INSERT INTO LIEN_RESEAU (id_lien_reseau, reseau_lien) VALUES
 (3, 'https://www.twitter.com/myevent');
 
 -- UTILISATEUR
-INSERT INTO UTILISATEUR (id_utilisateur, nom_user, tel, adresse, age, mot_de_passe, id_role) VALUES
-(1, 'John Doe', '+33612345678', '123 Main Street', 30, 'password', 2),
-(2, 'Jane Doe', '+33687654321', '456 Elm Street', 25, 'password', 2),
-(3, 'Admin', '+337987654321', '789 Oak Street', 40, 'password', 1);
+INSERT INTO UTILISATEUR (id_utilisateur, nom_user, tel, mail, age, mot_de_passe, id_role) VALUES
+(1, 'John Doe', '+33612345678', '', 30, 'password', 2),
+(2, 'Jane Doe', '+33687654321', '', 25, 'password', 2),
+(3, 'Admin', '+337987654321', '', 40, 'password', 1);
 
 -- BILLET
 INSERT INTO BILLET (id_billet, prix_billet, description_billet, type_billet, id_event) VALUES
 (1, 20.00, 'Billet standard', 'STANDARD', 1),
 (2, 30.00, 'Billet VIP', 'VIP', 1),
 (3, 10.00, 'Billet enfant', 'ENFANT', 1);
+
 
 -- SPECTATEUR
 INSERT INTO SPECTATEUR (id_spectateur, id_billet, id_utilisateur) VALUES

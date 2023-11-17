@@ -7,18 +7,25 @@
 
 <div class="login-container">
     <h2>Inscription</h2>
-    <form method="post" action="{{ url_for('connexion') }}">
-        <label for="Nom_utilisateur">Nom Utilisateur :</label>
-        <input type="text" id="Nom_utilisateur" name="Nom_utilisateur" required><br>
+    <form method="post" action="{{ url_for('save_inscription') }}">
+        <label for="nom">Nom :</label>
+        <input type="text" id="nom" name="nom" required><br>
 
-        <label for="mot_de_passe">Mot de passe:</label>
-        <input type="password" id="mot_de_passe" name="mot_de_passe" required><br>
+        <label for="tel">Telephone :</label>
+        <input type="tel" id="tel" name="tel" required><br>
 
-        <label for="conf_mot_de_passe">Confirmer mot de passe:</label>
-        <input type="password" id="conf_mot_de_passe" name="conf_mot_de_passe" required><br>
+        <label for="email">Email Utilisateur :</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="mdp">Mot de passe:</label>
+        <input type="password" id="mdp" name="mdp" required><br>
+
+        <label for="conf_mdp">Confirmer mot de passe:</label>
+        <input type="password" id="conf_mdp" name="conf_mdp" required><br>
 
         <input type="submit" value="Se connecter">
     </form>
+    <a href="{{ url_for('connexion')}}">Déja inscrit, connectez vous</a>
     <p>{{ message }}</p>
 </div>
 {% endblock %}

@@ -7,7 +7,7 @@ from flask import request, redirect, url_for
 @app.route('/')
 def accueil():
     cursor = models.get_cursor()
-    billet = models.liste_billets(cursor)
+    billet = models.liste_billets()
     return render_template(
         "accueil.html",
         billet = billet
@@ -25,6 +25,14 @@ def connexion():
 def inscription():
     return render_template(
         "inscription.html"
+    )
+
+@app.route('/boutique')
+def boutique():
+    billets = models.les_type_billets()
+    return render_template(
+        "boutique.html",
+        billets = billets
     )
 
 @app.route('/save_inscription', methods=("POST",))

@@ -20,7 +20,7 @@
         <p>Lieu: {{ billet[4] }}</p>
         <p>Prix: {{ billet[5] }}</p>
     </div>
-    <button class="buy-ticket-button">Acheter un Billet</button>
+    <a href="{{ url_for('boutique')}}"><button class="buy-ticket-button">Acheter un Billet</button></a>
 </section>
 {% endfor %}
 </section>

@@ -8,12 +8,12 @@
     {% block styles %}
       <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}">
     {% endblock %}
-    <title>FestIUT'O</title>
+    <title> FestIUT'O </title>
     {% endblock %}
   </head>
   <body>
     <header>
-        <a href="#" class="logo">Mon Festival</a>
+        <a href="{{ url_for('accueil') }}" class="logo">Mon Festival</a>
         <a href="{{ url_for('connexion') }}"><button class="login-button">Connexion</button></a>
     </header>
     <main class="main">

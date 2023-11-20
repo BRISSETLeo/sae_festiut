@@ -11,13 +11,20 @@ def get_cursor():
 def close_cursor(cursor):
     cursor.close()
 
+def execute_query(cursor, query, params=None):
+    if params:
+        cursor.execute(query, params)
+    else:
+        cursor.execute(query)
+
 def get_id_utilisateur_max(cursor):
     query = "SELECT MAX(id_utilisateur) FROM UTILISATEUR"
     execute_query(cursor, query)
     return cursor.fetchone()[0]
 
-def liste_billets(cursor):
+def liste_billets():
     try:
+        cursor = get_cursor()
         query = "SELECT * FROM BILLET"
         execute_query(cursor, query)
         result = cursor.fetchall()
@@ -25,6 +32,18 @@ def liste_billets(cursor):
     except Exception as e:
         print(e.args)
     return None
+
+def les_type_billets():
+    try:
+        cursor = get_cursor()
+        query = "SELECT * FROM BILLET_TYPE"
+        execute_query(cursor, query)
+        result = cursor.fetchall()
+        return result
+    except Exception as e:
+        print(e.args)
+    return None
+
 
 def liste_utilisateurs():
     try:
@@ -37,12 +56,6 @@ def liste_utilisateurs():
     except Exception as e:
         print(e.args)
     return None
-
-def execute_query(cursor, query, params=None):
-    if params:
-        cursor.execute(query, params)
-    else:
-        cursor.execute(query)
 
 def save_inscription(nom, tel, email, mdp):
     try:

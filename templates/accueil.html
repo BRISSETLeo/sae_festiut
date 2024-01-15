@@ -4,24 +4,18 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/accueil.css')}}"> 
 {% endblock %}
 {% block content %}
-<article>
-    <div class="image-container">
-        <img src="./static/images/images.jpeg" alt="Impossible">
-    </div>
-    <p>Ici il y aura une description du festival et pourquoi pas une image en fond un peu flouté</p>
-</article>
 <section class="festival-tickets-container">
-{% for billet in billet %}
+{% for fest in festival %}
 <section class="festival-ticket">
-    <h2>{{ billet[1] }}</h2>
-    <p>{{ billet[2] }}</p>
-    <div class="ticket-details">
-        <p>Date: {{ billet[3] }}</p>
-        <p>Lieu: {{ billet[4] }}</p>
-        <p>Prix: {{ billet[5] }}</p>
+    
+    <div class="festival-container">
+        <p> {{ fest }} </p>
     </div>
-    <a href="{{ url_for('boutique')}}"><button class="buy-ticket-button">Acheter un Billet</button></a>
+
 </section>
 {% endfor %}
+{% if utilisateur is not none and utilisateur[-1] == "ADMINISTRATEUR" %}
+<a href="{{ url_for('nouveau_festival')}}" class="festival-button">Créer un nouveau festival</a>
+{% endif %}
 </section>
 {% endblock %}

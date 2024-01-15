@@ -6,56 +6,45 @@ from flask import request, redirect, url_for
 # accueil
 @app.route('/')
 def accueil():
-    cursor = models.get_cursor()
-    billet = models.liste_billets()
-    return render_template(
-        "accueil.html",
-        billet = billet
-    )
+    utilisateur = models.get_compte()
+    festival = models.get_festival()
+    return render_template("accueil.html", festival=festival, utilisateur=utilisateur)
 
 @app.route('/connexion')
 def connexion():
-    utilisateur = models.liste_utilisateurs()
-    return render_template(
-        "connexion.html",
-        utilisateur = utilisateur
-    )
+    utilisateur = models.get_compte()
+    return render_template("connexion.html", utilisateur=utilisateur,erreur="")
+
+@app.route('/deconnexion')
+def deconnexion():
+    models.deconnexion()
+    return redirect(url_for('accueil'))
 
 @app.route('/inscription')
 def inscription():
-    return render_template(
-        "inscription.html"
-    )
-
-@app.route('/boutique')
-def boutique():
-    billets = models.les_type_billets()
-    return render_template(
-        "boutique.html",
-        billets = billets
-    )
+    return render_template("inscription.html", utilisateur=None,erreur="")
 
 @app.route('/save_inscription', methods=("POST",))
 def save_inscription():
     nom = request.form['nom']
-    tel = request.form['tel']
-    email = request.form['email']
     mdp = request.form['mdp']
-    cursor = models.get_cursor()
-    models.save_inscription(nom, tel, email, mdp)
-    models.close_cursor(cursor)
+    conf_mdp = request.form['conf_mdp']
+    if(mdp != conf_mdp):
+        return render_template("inscription.html", utilisateur=None, erreur="Les mots de passe ne correspondent pas")
+    models.save_inscription(nom, mdp)
+    utilisateur = models.get_compte()
     return redirect(url_for('accueil'))
 
 @app.route('/verif_connexion', methods=("POST",))
 def verif_connexion():
-    email = request.form['email']
+    pseudo = request.form['pseudo']
     mdp = request.form['mot_de_passe']
-    cursor = models.get_cursor()
-    utilisateur = models.verif_connexion(email, mdp)
-    models.close_cursor(cursor)
-    if utilisateur :
-        print("Connexion réussie")
-        print(utilisateur)
-    else :
-        print("Connexion échouée")
+    utilisateur = models.verif_connexion(pseudo, mdp)
+    if utilisateur is not None:
+        return redirect(url_for('accueil'))
+    return render_template("connexion.html", utilisateur=None, erreur="Pseudo ou mot de passe incorrecte")
+    
+@app.route('/nouveau_festival')
+def nouveau_festival():
+    models.nouveau_festival()
     return redirect(url_for('accueil'))

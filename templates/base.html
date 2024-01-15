@@ -14,7 +14,12 @@
   <body>
     <header>
         <a href="{{ url_for('accueil') }}" class="logo">Mon Festival</a>
+        {% if utilisateur is none %}
         <a href="{{ url_for('connexion') }}"><button class="login-button">Connexion</button></a>
+        {% else %}
+        <p> {{ utilisateur[0] }} </p>
+        <a href="{{ url_for('deconnexion') }}"><button class="login-button">Deconnexion</button></a>
+        {% endif %}
     </header>
     <main class="main">
       {% block content %}

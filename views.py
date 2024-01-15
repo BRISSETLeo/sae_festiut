@@ -1,50 +1,72 @@
-from flask import render_template
-from .app import app
-from . import models
-from flask import request, redirect, url_for
+from .app import app, db
+from flask import render_template, url_for, redirect, request
+from .models import Compte, Role
+from flask_wtf import FlaskForm
+from wtforms import StringField , HiddenField, PasswordField
+from wtforms.validators import DataRequired
+from hashlib import sha256
+from flask_login import login_user, current_user, login_required, logout_user
+from flask import request
 
-# accueil
-@app.route('/')
-def accueil():
-    utilisateur = models.get_compte()
-    festival = models.get_festival()
-    return render_template("accueil.html", festival=festival, utilisateur=utilisateur)
+@app.route("/")
+def home():
+    return render_template("accueil.html")
 
-@app.route('/connexion')
-def connexion():
-    utilisateur = models.get_compte()
-    return render_template("connexion.html", utilisateur=utilisateur,erreur="")
+class AuthorForm(FlaskForm):
+    pseudo = HiddenField('pseudo')
+    name = StringField('Nom', validators=[DataRequired()]) 
 
-@app.route('/deconnexion')
-def deconnexion():
-    models.deconnexion()
-    return redirect(url_for('accueil'))
+class LoginForm(FlaskForm):
+    pseudo = StringField('pseudo')
+    password = PasswordField('Password')
+    next = HiddenField()
 
-@app.route('/inscription')
-def inscription():
-    return render_template("inscription.html", utilisateur=None,erreur="")
+    def get_authenticated_user(self):
+        compte = Compte.query.get(self.pseudo.data) 
+        if compte is None:
+            return None
+        
+        # Hashage
+        m = sha256()
+        m.update(self.password.data.encode())
+        passwd = m.hexdigest()
 
-@app.route('/save_inscription', methods=("POST",))
-def save_inscription():
-    nom = request.form['nom']
-    mdp = request.form['mdp']
-    conf_mdp = request.form['conf_mdp']
-    if(mdp != conf_mdp):
-        return render_template("inscription.html", utilisateur=None, erreur="Les mots de passe ne correspondent pas")
-    models.save_inscription(nom, mdp)
-    utilisateur = models.get_compte()
-    return redirect(url_for('accueil'))
+        return compte if passwd == compte.password else None
 
-@app.route('/verif_connexion', methods=("POST",))
-def verif_connexion():
-    pseudo = request.form['pseudo']
-    mdp = request.form['mot_de_passe']
-    utilisateur = models.verif_connexion(pseudo, mdp)
-    if utilisateur is not None:
-        return redirect(url_for('accueil'))
-    return render_template("connexion.html", utilisateur=None, erreur="Pseudo ou mot de passe incorrecte")
-    
-@app.route('/nouveau_festival')
-def nouveau_festival():
-    models.nouveau_festival()
-    return redirect(url_for('accueil'))
+@app.route("/login/", methods=["GET", "POST" ,])
+def login():
+    f = LoginForm()
+    if not f.is_submitted():
+        f.next.data = request.args.get("next")
+    elif f.validate_on_submit():
+        compte = Compte.query.get(f.pseudo.data) 
+        if compte:
+            login_user(compte)
+            return redirect(url_for("home"))
+    return render_template("login.html",form=f)
+
+@app.route("/register/", methods=["GET", "POST"])
+def register():
+    f = LoginForm()
+    if not f.is_submitted():
+        f.next.data = request.args.get("next")
+    elif f.validate_on_submit():
+        compte = Compte.query.get(f.pseudo.data) 
+        if compte:
+            f.next.data = request.args.get("hidden")
+            print("L'utilisateur existe déjà.", "error")
+        else:
+            m = sha256()
+            m.update(f.password.data.encode())
+            passwd = m.hexdigest()
+            compte = Compte(pseudo=f.pseudo.data, password=passwd)
+            db.session.add(compte)
+            db.session.commit()
+            login_user(compte)
+            return redirect(url_for("home"))
+    return render_template("login.html", form=f)
+
+@app.route("/logout/")
+def logout():
+    logout_user()
+    return redirect(url_for("home"))

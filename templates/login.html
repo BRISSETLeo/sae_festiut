@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/login.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/register.css')}}">
+{% endblock %}
+{% block content %}
+<div class="grid-container">
+    <div class="login-container grid-item">
+        <form class="login-form" role="form" method="POST" action="{{ url_for ('login') }}">
+            {{ form.hidden_tag() }}
+            <div>
+                <h2>Se Connecter</h2>
+                <label for="pseudo" class="col-sm-2control-label">{{ form.pseudo.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.pseudo(size=50, class_="form-control",placeholder ="Pseudo") }}
+                </div>
+            </div>
+            <div>
+                <label for="password" class="col-sm-2control-label">{{ form.password.label }}</label>
+                <div class="col-sm-10">
+                    {{ form. password (size =50, class_="form-control",
+                    placeholder="Password") }}
+                </div>
+            </div>
+            <div>
+                <div class="col-sm-offset-2col-sm-10">
+                    <button class="button-utile" type="submit" class="additional-buttons">Se Connecter</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="register-container grid-item">
+        <form class="register-form" role="form" method="POST" action="{{ url_for ('register') }}">
+            {{ form.hidden_tag() }}
+            <div>
+                <h2>S'incrire</h2>
+                <label for="pseudo" class="col-sm-2control-label">{{ form.pseudo.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.pseudo(size=50, class_="form-control",placeholder ="pseudo") }}
+                </div>
+            </div>
+            <div>
+                <label for="password" class="col-sm-2control-label">{{ form.password.label }}</label>
+                <div class="col-sm-10">
+                    {{ form. password (size =50, class_="form-control",
+                    placeholder="Password") }}
+                </div>
+            </div>
+            <div>
+                <div class="col-sm-offset-2col-sm-10">
+                    <button class="button-utile" type="submit" class="btnbtn-default">S'incrire</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

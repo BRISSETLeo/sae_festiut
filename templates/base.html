@@ -1,29 +1,48 @@
 <!doctype html>
 <html lang="fr">
-  <head>
+<head>
     {% block head %}
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% block styles %}
-      <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}">
+    {{ bootstrap.load_css() }}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/navbar.css')}}">
     {% endblock %}
-    <title> FestIUT'O </title>
+    <title>Ma bibliothèque SF</title>
     {% endblock %}
-  </head>
-  <body>
+</head>
+<body>
     <header>
-        <a href="{{ url_for('accueil') }}" class="logo">Mon Festival</a>
-        {% if utilisateur is none %}
-        <a href="{{ url_for('connexion') }}"><button class="login-button">Connexion</button></a>
-        {% else %}
-        <p> {{ utilisateur[0] }} </p>
-        <a href="{{ url_for('deconnexion') }}"><button class="login-button">Deconnexion</button></a>
-        {% endif %}
+        <nav>
+            <ul class="navbar">
+                <li><a href="{{ url_for('home') }}">My Books</a></li>
+                <li><a aria-current="page" href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="#">Link</a></li>
+                <li><a>Disabled</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a>{{ current_user.username }}</a></li>
+                <li><a class="right" aria-current="page" href="{{ url_for('logout') }}">Déconnexion</a></li>
+                {% else %}
+                <li><a class="right" aria-current="page" href="{{ url_for('login') }}">Connexion</a></li>
+                {% endif %}
+            </ul>
+        </nav>        
     </header>
-    <main class="main">
-      {% block content %}
-      {% endblock %}
+    <!-- Your page content -->
+    <main class="flex-shrink-0">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
     </main>
-  </body>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted">© 2023 BRISSET Léo</span>
+        </div>
+    </footer>
+    {% block scripts %}
+    {{ bootstrap.load_js() }}
+    {% endblock %}
+</body>
 </html>

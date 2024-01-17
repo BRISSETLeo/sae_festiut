@@ -4,32 +4,31 @@
     {% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% endblock %}
+    
     {% block styles %}
+    <script src="{{ url_for('static', filename='js/base.js')}}"></script>
     {{ bootstrap.load_css() }}
-    <link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/navbar.css')}}">
     {% endblock %}
     <title>Ma bibliothèque SF</title>
-    {% endblock %}
 </head>
 <body>
     <header>
-        <nav>
-            <ul class="navbar">
-                <li><a href="{{ url_for('home') }}">My Books</a></li>
-                <li><a aria-current="page" href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="#">Link</a></li>
-                <li><a>Disabled</a></li>
-                {% if current_user.is_authenticated %}
-                <li><a>{{ current_user.username }}</a></li>
-                <li><a class="right" aria-current="page" href="{{ url_for('logout') }}">Déconnexion</a></li>
-                {% else %}
-                <li><a class="right" aria-current="page" href="{{ url_for('login') }}">Connexion</a></li>
-                {% endif %}
+        <div>
+            <img class="menu-link" src="{{ url_for('static', filename='images/menu.png')}}" alt="" onclick="toggleContainerClass()">
+        <div class="deroulant">
+        <nav id="main-nav">
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/billeterie">Billetterie</a></li>
+                <li><a href="/programmation">Programmation</a></li>
+                <!-- Ajoutez d'autres rubriques de navigation selon vos besoins -->
             </ul>
-        </nav>        
+        </nav>
     </header>
-    <!-- Your page content -->
+    
     <main class="flex-shrink-0">
         <div class="container">
             {% block content %}

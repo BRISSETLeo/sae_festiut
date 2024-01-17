@@ -12,19 +12,21 @@ bootstrap = Bootstrap5(app)
 login_manager = LoginManager(app)
 
 app.config['BOOTSTRAP_SERVE_LOCAL'] = True
-app.config['SECRET_KEY'] = '1605f5de-4091-48f0-8bcb-b4f98e456835'
+app.config['SECRET_KEY'] = '3b6be466-1cd7-47cc-9a61-689735e10610'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://ozocak:ozocak@servinfo-maria:3306/DBozocak'
 
 db = SQLAlchemy(app)
+
+from .models import Role
 with app.app_context():
     print("Creating database tables...")
-    if db.create_all():
-        from .models import Role
-        
-        user = Role(nomRole="Utilisateur")
-        admin = Role(nomRole="Administrateur")
-        db.session.add(user)
-        db.session.add(admin)
+    db.create_all()
+    
+    if Role.query.count() == 0:    
+        utilisateur = Role(nomRole="Utilisateur")
+        administateur = Role(nomRole="Administrateur")
+        db.session.add(utilisateur)
+        db.session.add(administateur)
         db.session.commit()
     
 # from . models import User

@@ -18,6 +18,16 @@ class Utilisateur(db.Model, UserMixin):
     def __repr__(self):
         return f"<Utilisateur {self.nom}: {self.password} {self.monRole}>"
 
+class Festival(db.Model):
+    idFestival = db.Column(db.Integer, primary_key=True, nullable=False)
+    nomFestival = db.Column(db.String(25), nullable=False)
+    dateDebut = db.Column(db.DateTime, nullable=False)
+    dateFin = db.Column(db.DateTime, nullable=False)
+    nomVille = db.Column(db.String(25), nullable=False)
+    
+    def __repr__(self):
+        return f"<Festival {self.nomFestival}: {self.dateDebut} {self.dateFin} {self.nomVille}>"
+
 @login_manager.user_loader
 def load_user(nom):
     return Utilisateur.query.get(nom)

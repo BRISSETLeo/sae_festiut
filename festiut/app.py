@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://ozocak:ozocak@servinfo-maria:33
 
 db = SQLAlchemy(app)
 
-from .models import Role, Festival, Billet, BilletFestival
+from .models import Role, Festival, Billet
 with app.app_context():
     print("Deleting database tables...")
     db.drop_all()
@@ -37,35 +37,16 @@ with app.app_context():
             nomLieu="IUT de Lens"
         )
         db.session.add(festival)
+        
+        imageToBinary = open(mkpath("static/images/billet.png"), "rb").read()
 
-        billetJournee = Billet(nomTypeBillet="Journée")
+        billetJournee = Billet(nomTypeBillet="Journée",imageBillet=imageToBinary)
         billet2Jours = Billet(nomTypeBillet="2 jours")
         billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival")
         db.session.add(billetJournee)
         db.session.add(billet2Jours)
         db.session.add(billetTotaliteDuFestival)
 
-        db.session.commit()
-
-        billetJourneFestival = BilletFestival(
-            idFestival=festival.idFestival,
-            idBillet=billetJournee.idBillet,
-            prix=45
-        )
-        billet2JourFestival = BilletFestival(
-            idFestival=festival.idFestival,
-            idBillet=billet2Jours.idBillet,
-            prix=80
-        )
-        billetTotaliteFestival = BilletFestival(
-            idFestival=festival.idFestival,
-            idBillet=billetTotaliteDuFestival.idBillet,
-            prix=140
-        )
-
-        db.session.add(billetJourneFestival)
-        db.session.add(billet2JourFestival)
-        db.session.add(billetTotaliteFestival)
         db.session.commit()
 
     

@@ -67,8 +67,15 @@ class Event(db.Model):
     typeEvent = db.Column(db.String(25), db.ForeignKey('type_event.nomEvent'), nullable=False)
     dateDebut = db.Column(db.DateTime, nullable=False)
     dateFin = db.Column(db.DateTime, nullable=False)
-    nomLieu = db.Column(db.String(25), nullable=False)
-    imageBillet = db.Column(db.LargeBinary(2**16), nullable=True)
+    nomLieu = db.Column(db.String(100), nullable=False)
+    descriptionEvent = db.Column(db.String(500), nullable=False)
+    imageEvent = db.Column(db.LargeBinary, nullable=True)
+    
+    def enregistrer_nouvel_event(nom_event, type_event, date_debut, date_fin, nom_lieu, description_event, image_event):
+        print(image_event)
+        event = Event(nomEvent=nom_event, typeEvent=type_event, dateDebut=date_debut, dateFin=date_fin, nomLieu=nom_lieu, descriptionEvent=description_event, imageEvent=image_event)
+        db.session.add(event)
+        db.session.commit()
     
     def __repr__(self):
         return f"<Event {self.nomEvent}: {self.dateDebut} {self.dateFin} {self.nomLieu}>"

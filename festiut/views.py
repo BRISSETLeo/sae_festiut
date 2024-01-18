@@ -1,6 +1,6 @@
 from .app import app, login_manager
 from flask import render_template,request, redirect, url_for
-from .models import BilletAchete, Utilisateur, save_user, Festival, Billet, db, TypeEvent
+from .models import BilletAchete, Utilisateur, save_user, Festival, Billet, db, TypeEvent, Event
 from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
@@ -37,7 +37,9 @@ class RegisterForm(FlaskForm):
 @app.route("/")
 def home():
     festival = Festival.query.first()
-    return render_template("home.html", festival=festival)
+    concert = Event.query.filter_by().first()
+    print(concert)
+    return render_template("home.html", festival=festival, concert=concert)
 
 @login_manager.user_loader
 def load_user(nom):
@@ -107,19 +109,17 @@ def ajouter_evenement():
     types_events = TypeEvent.query.all()
     return render_template("ajouter_evenement.html", types=types_events)
 
+from datetime import datetime
 
-from datetime import datetime, timedelta
-
-@app.route('/creation_evenement/', methods=['get'])
+app.route('/admin/creation_evenement/', methods=['POST'])
 def creation_evenement():
-    
-    nomEvent = request.args.get('nomEvent')
-    typeEvent = request.args.get('typeEvent')
-    dateDebut_str = request.args.get('dateDebut')
-    dateFin_str = request.args.get('dateFin')
-    nomLieu = request.args.get('nomLieu')
-    descriptionEvent = request.args.get('descriptionEvent')
-    imageEvent = request.args.get('imageEvent')
+    nomEvent = request.form.get('nomEvent')
+    typeEvent = request.form.get('typeEvent')
+    dateDebut_str = request.form.get('dateDebut')
+    dateFin_str = request.form.get('dateFin')
+    nomLieu = request.form.get('nomLieu')
+    descriptionEvent = request.form.get('descriptionEvent')
+    imageEvent = request.form.get('imageEvent')
     
     dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%dT%H:%M')
     dateFin = datetime.strptime(dateFin_str, '%Y-%m-%dT%H:%M')
@@ -129,17 +129,18 @@ def creation_evenement():
     dateDebutFestival = festival.dateDebut
     dateFinFestival = festival.dateFin
     
-    if dateDebut >= dateFin:
-        return redirect(url_for('ajouter_evenement'))
+    print(imageEvent, type(imageEvent))
     
-    if not (dateDebutFestival <= dateDebut <= dateFinFestival):
-        return redirect(url_for('ajouter_evenement'))
-    
-    if not (dateDebutFestival <= dateFin <= dateFinFestival):
-        return redirect(url_for('ajouter_evenement'))
-    
-    
-    
+    Event.enregistrer_nouvel_event(nom_event=nomEvent, type_event=typeEvent, date_debut=dateDebut, date_fin=dateFin, nom_lieu=nomLieu, description_event=descriptionEvent, image_event=imageEvent)
+
     return redirect(url_for('home'))
 
+@app.template_filter('byte_to_image')
+def byte_to_image(byte):
+    from PIL import Image
+    from io import BytesIO
+    import base64
+    
+    image_base64 = base64.b64encode(BytesIO(data).read()).decode('utf-8')
+    return Markup(f'<img src="data:image/png;base64,{image_base64}" alt="Image">')
     

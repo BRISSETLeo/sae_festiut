@@ -21,10 +21,9 @@
             {% endfor %}
         {% endif %}
         {% if billet.nomTypeBillet == 'Totalité du festival' %}
-        <label for="quantite">Quantité :</label>
         {% endif %}
-        <input type="text" name="prix" id="prix" placeholder="Entrez le prix" required>
         <label for="prix">Prix du billet :</label>
+        <label for="quantite">Quantité :</label>
         <input type="number" name="quantite" id="quantite" value="1" min="1"  max="3" required>
     </section>
     <input class="valider" type="submit" id="valider" name="valider" value="Acheter le billet"/>

@@ -4,7 +4,8 @@ section.Acheter_billet {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    width: 60%; /* Ajustez la largeur selon vos préférences */
+    width: 60%;
+    background-color: #fffbe4;
 }
 
 /* Style pour les labels */
@@ -14,7 +15,9 @@ label {
 }
 
 /* Style pour les sélecteurs */
-select, input[type="text"], input[type="number"] {
+select,
+input[type="text"],
+input[type="number"] {
     width: calc(100% - 16px);
     padding: 10px;
     margin-bottom: 16px;
@@ -34,5 +37,3 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #45a049;
 }
-
-

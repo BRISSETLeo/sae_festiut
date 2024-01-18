@@ -8,7 +8,7 @@ def loaddb():
     print("Creating database tables...")
     db.create_all()
     
-    from .models import Role, Festival, Billet, Utilisateur;
+    from .models import Role, Festival, Billet, Utilisateur, TypeEvent;
         
     db.session.add(Role(nomRole="Utilisateur"))
     db.session.add(Role(nomRole="Administrateur"))
@@ -24,13 +24,22 @@ def loaddb():
     )
     db.session.add(festival)
         
-    billetJournee = Billet(nomTypeBillet="Journée", imageBillet= open("static/images/billetJournee.png", "rb").read())
-    billet2Jours = Billet(nomTypeBillet="2 jours", imageBillet= open("static/images/billet2Jours.png", "rb").read())
-    billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival", imageBillet= open("static/images/billetTotaliteDuFestival.png", "rb").read())
-
+    billetJournee = Billet(nomTypeBillet="Journée")
+    billet2Jours = Billet(nomTypeBillet="2 jours")
+    billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival")
     db.session.add(billetJournee)
     db.session.add(billet2Jours)
     db.session.add(billetTotaliteDuFestival)
+    
+    db.session.add(TypeEvent(nomEvent="Concert"))
+    db.session.add(TypeEvent(nomEvent="Spectacle"))
+    db.session.add(TypeEvent(nomEvent="Conférence"))
+    db.session.add(TypeEvent(nomEvent="Exposition"))
+    db.session.add(TypeEvent(nomEvent="Projection"))
+    db.session.add(TypeEvent(nomEvent="Atelier"))
+    db.session.add(TypeEvent(nomEvent="Rencontre"))
+    db.session.add(TypeEvent(nomEvent="Débat"))
+    db.session.add(TypeEvent(nomEvent="Dédicace"))
     
     db.session.commit()    
     

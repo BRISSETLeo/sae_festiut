@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_evenement.css')}}">
+{% endblock %}
+{% block main %}
+
+<div class="parent">
+
+    <form class="form-parent" action="{{ url_for('creation_evenement') }}" method="get">
+
+        <div class="first">
+            <div>
+                <input type="text" name="nomEvent" placeholder="Nom de l'évènement" required>
+            </div>
+
+            <div>
+                <select type="option" name="typeEvent" placeholder="Type d'évènement" required>
+                {% for type in types %}
+                    <option value="{{ type.nomEvent }}">{{ type.nomEvent }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <input type="datetime-local" name="dateDebut" placeholder="Date de début" required>
+            </div>
+                
+            <div>
+                <input type="datetime-local" name="dateFin" id="dateFin" placeholder="Date de fin" required>
+            </div>
+
+            <div>
+                <input type="text" name="nomLieu" placeholder="Adresse du lieu" required>
+            </div>
+
+            <div>
+                <input type="file" id="fileInput" onchange="previewImage()">
+                <label for="fileInput">Choisir une image</label>
+            </div>
+
+            <div>
+                <input type="textarea" name="descriptionEvent" placeholder="description de l'événement" required>
+            </div>
+        </div>
+
+        <div class="second"><div id="previewImageContainer"></div></div>
+
+        <input type="submit" value="Ajouter l'événement">
+
+    </form>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/ajouter_evenement.js') }}"></script>
+
+{% endblock %}

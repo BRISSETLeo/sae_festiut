@@ -5,4 +5,7 @@
 {% endblock %}
 {% block main %}
 <h2> {{ festival.nomFestival }} </h2>
+{% if current_user.is_authenticated and current_user.monRole == "Administrateur" %}
+    <a href="{{ url_for('ajouter_evenement') }}" class="btn btn-primary">Ajouter un événement</a>
+{% endif %}
 {% endblock %}

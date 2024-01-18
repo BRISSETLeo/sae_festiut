@@ -1,6 +1,6 @@
 from .app import app, login_manager
 from flask import render_template,request, redirect, url_for
-from .models import BilletAchete, Utilisateur, save_user, Festival, Billet, db
+from .models import BilletAchete, Utilisateur, save_user, Festival, Billet, db, TypeEvent
 from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
@@ -99,4 +99,45 @@ def acheter_billet(idBillet):
         BilletAchete.acheter_billet(id_billet=idBillet, date_debut=dateDebut, date_fin=dateFin)
         return redirect(url_for('home'))
     return render_template("acheter_billet.html", billet=billet)
+    
+@app.route("/admin/ajouter_evenement")
+def ajouter_evenement():
+    types_events = TypeEvent.query.all()
+    return render_template("ajouter_evenement.html", types=types_events)
+
+
+from datetime import datetime
+
+@app.route('/creation_evenement/', methods=['get'])
+def creation_evenement():
+    
+    nomEvent = request.args.get('nomEvent')
+    typeEvent = request.args.get('typeEvent')
+    dateDebut_str = request.args.get('dateDebut')
+    dateFin_str = request.args.get('dateFin')
+    nomLieu = request.args.get('nomLieu')
+    descriptionEvent = request.args.get('descriptionEvent')
+    imageEvent = request.args.get('imageEvent')
+    
+    dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%dT%H:%M')
+    dateFin = datetime.strptime(dateFin_str, '%Y-%m-%dT%H:%M')
+    
+    festival = Festival.query.first()
+    
+    dateDebutFestival = festival.dateDebut
+    dateFinFestival = festival.dateFin
+    
+    if dateDebut >= dateFin:
+        return redirect(url_for('ajouter_evenement'))
+    
+    if not (dateDebutFestival <= dateDebut <= dateFinFestival):
+        return redirect(url_for('ajouter_evenement'))
+    
+    if not (dateDebutFestival <= dateFin <= dateFinFestival):
+        return redirect(url_for('ajouter_evenement'))
+    
+    
+    
+    return redirect(url_for('home'))
+
     

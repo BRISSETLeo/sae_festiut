@@ -55,7 +55,7 @@ class BilletAchete(db.Model):
     def __repr__(self):
         return f"<BilletAchete {self.idBilletAchete}: {self.dateDebut} {self.dateFin}"
     
-class TypEvent(db.Model):
+class TypeEvent(db.Model):
     nomEvent = db.Column(db.String(25), primary_key=True, nullable=False)
     
     def __repr__(self):
@@ -63,7 +63,8 @@ class TypEvent(db.Model):
     
 class Event(db.Model):
     idEvent = db.Column(db.Integer, primary_key=True, nullable=False)
-    nomEvent = db.Column(db.String(25), db.ForeignKey('typ_event.nomEvent'), nullable=False)
+    nomEvent = db.Column(db.String(25), nullable=False)
+    typeEvent = db.Column(db.String(25), db.ForeignKey('type_event.nomEvent'), nullable=False)
     dateDebut = db.Column(db.DateTime, nullable=False)
     dateFin = db.Column(db.DateTime, nullable=False)
     nomLieu = db.Column(db.String(25), nullable=False)

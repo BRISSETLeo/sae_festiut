@@ -1,0 +1,32 @@
+.parent{
+    padding: 1em;
+    text-align: center;
+    width: 100%;
+}
+
+.parent div, .parent input {
+    font-size: 1.2em;
+    padding: 0.4em;
+    margin: 0.2em;
+    width: 100%;
+}
+
+#fileInput{
+    display: none;
+}
+
+#fileInput + label{
+    width: 100%;
+    cursor: pointer;
+    height: 100%;
+}
+
+.form-parent{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#previewImageContainer{
+    width: 100%;
+    height: 100%;
+}

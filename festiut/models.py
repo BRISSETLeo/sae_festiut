@@ -32,6 +32,7 @@ class Festival(db.Model):
 class Billet(db.Model):
     idBillet = db.Column(db.Integer, primary_key=True, nullable=False)
     nomTypeBillet = db.Column(db.String(25), nullable=False)
+    prix = db.Column(db.Float, nullable=False)
     imageBillet = db.Column(db.LargeBinary, nullable=True)
     
     billets_achetes = db.relationship('BilletAchete', back_populates='billet')
@@ -40,20 +41,18 @@ class Billet(db.Model):
         return f"<Billet {self.idBillet}: {self.nomTypeBillet}"
 
 class BilletAchete(db.Model):
-    idBilletAchete = db.Column(db.Integer,db.ForeignKey('billet.idBillet'), primary_key=True, nullable=False)
-    
+    idBilletAchete = db.Column(db.Integer, primary_key=True, nullable=False)
+    nom = db.Column(db.String(25), db.ForeignKey('utilisateur.nom'), nullable=False)
+    idBillet = db.Column(db.Integer, db.ForeignKey('billet.idBillet'), nullable=False)
     dateDebut = db.Column(db.DateTime, nullable=False)
     dateFin = db.Column(db.DateTime, nullable=False)
     
     billet = db.relationship('Billet', back_populates='billets_achetes')
     
-    def acheter_billet(id_billet, date_debut, date_fin):
-        billet_achete = BilletAchete(idBilletAchete=id_billet, dateDebut=date_debut, dateFin=date_fin)
+    def acheter_billet(id_billet, nom_utilisateur, date_debut, date_fin):
+        billet_achete = BilletAchete(idBillet=id_billet, nom=nom_utilisateur, dateDebut=date_debut, dateFin=date_fin)
         db.session.add(billet_achete)
         db.session.commit()
-
-    def __repr__(self):
-        return f"<BilletAchete {self.idBilletAchete}: {self.dateDebut} {self.dateFin}"
     
 class TypeEvent(db.Model):
     nomEvent = db.Column(db.String(25), primary_key=True, nullable=False)

@@ -1,0 +1,38 @@
+/* Style général pour le formulaire */
+section.Acheter_billet {
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 60%; /* Ajustez la largeur selon vos préférences */
+}
+
+/* Style pour les labels */
+label {
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Style pour les sélecteurs */
+select, input[type="text"], input[type="number"] {
+    width: calc(100% - 16px);
+    padding: 10px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+/* Style pour le bouton */
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+

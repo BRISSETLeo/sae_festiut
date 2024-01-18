@@ -8,6 +8,7 @@ from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from datetime import datetime, timedelta
+from itertools import combinations
 
 class LoginForm(FlaskForm):
     nom = StringField('Nom')
@@ -92,16 +93,38 @@ def info_billet(idBillet):
     festival = Festival.query.first()
     jours_disponibles = [date.strftime('%Y-%m-%d') for date in 
                      (festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1))]
+    combinaisons_jours = list(combinations(jours_disponibles, 2))
+    combinaisons_successives = [comb for comb in combinaisons_jours if jours_disponibles.index(comb[0]) == jours_disponibles.index(comb[1]) - 1]
+
     return render_template("info_billet.html",
-                           billet=billet, jours_disponibles=jours_disponibles)
+                           billet=billet, jours_disponibles=jours_disponibles, duo_disponible=combinaisons_successives)
     
 @app.route("/acheter_billet/<int:idBillet>", methods =("GET","POST" ,))
 def acheter_billet(idBillet):
     billet = Billet.query.filter_by(idBillet=idBillet).first()
+    festival = Festival.query.first()
     if request.method == "POST":
-        dateDebut = request.form['dateDebut']
-        dateFin = request.form['dateFin']
-        BilletAchete.acheter_billet(id_billet=idBillet, date_debut=dateDebut, date_fin=dateFin)
+        if current_user.is_authenticated:
+            utilisateur_nom = current_user.nom
+        else:
+            return redirect(url_for('login'))
+        
+        if billet.nomTypeBillet == 'Journée':
+            dateDebut = request.form['dateDebut']
+            dateFin = dateDebut
+
+        elif billet.nomTypeBillet == 'Totalité du festival':
+            dateDebut = festival.dateDebut
+            dateFin = festival.dateFin
+
+        elif billet.nomTypeBillet == '2 jours':
+            dateDebut_str = request.form['dateDebut'][2:12]
+            dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%d')
+            dateFin = dateDebut + timedelta(days=1)
+
+        for _ in range(int(request.form['quantite'])):
+            BilletAchete.acheter_billet(idBillet, utilisateur_nom, dateDebut, dateFin)
+
         return redirect(url_for('home'))
     return render_template("acheter_billet.html", billet=billet)
     

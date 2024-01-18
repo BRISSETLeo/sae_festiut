@@ -69,7 +69,7 @@ class Event(db.Model):
     dateFin = db.Column(db.DateTime, nullable=False)
     nomLieu = db.Column(db.String(100), nullable=False)
     descriptionEvent = db.Column(db.String(500), nullable=False)
-    imageEvent = db.Column(db.LargeBinary, nullable=True)
+    imageEvent = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
     
     def enregistrer_nouvel_event(nom_event, type_event, date_debut, date_fin, nom_lieu, description_event, image_event):
         event = Event(nomEvent=nom_event, typeEvent=type_event, dateDebut=date_debut, dateFin=date_fin, nomLieu=nom_lieu, descriptionEvent=description_event, imageEvent=image_event)

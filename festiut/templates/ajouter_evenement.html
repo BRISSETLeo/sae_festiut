@@ -1,56 +1,31 @@
 {% extends 'base.html' %}
+
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_evenement.css')}}">
 {% endblock %}
 {% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_evenement.css') }}">
+<form class="form-parent" action="{{ url_for('add_evenement') }}" method="POST" enctype="multipart/form-data">
+    <input class="size" type="text" name="nomEvent" placeholder="Nom de l'évènement" required>
 
-<div class="parent">
+    <select class="size" type="option" name="typeEvent" placeholder="Type d'évènement" required>
+        {% for type in types %}
+            <option value="{{ type.nomEvent }}">{{ type.nomEvent }}</option>
+        {% endfor %}
+    </select>
 
-    <form class="form-parent" action="{{ url_for('add_evenement') }}" method="POST" enctype="multipart/form-data">
+    <input class="size" type="datetime-local" name="dateDebut" placeholder="Date de début" required>
+    <input class="size" type="datetime-local" name="dateFin" id="dateFin" placeholder="Date de fin" required>
+    <input class="size" type="text" name="nomLieu" placeholder="Adresse du lieu" required>
 
-        <div class="first">
-            <div>
-                <input type="text" name="nomEvent" placeholder="Nom de l'évènement" required>
-            </div>
+    <div class="container">
+        <input class="size" type="file" name="image" id="image-input">
+        <script src="{{ url_for('static', filename='js/gestionnaireImage.js') }}"></script>
+        <img class="size" id="image-charge" src="" alt="Glisser/Déposer une image">
+    </div>
 
-            <div>
-                <select type="option" name="typeEvent" placeholder="Type d'évènement" required>
-                {% for type in types %}
-                    <option value="{{ type.nomEvent }}">{{ type.nomEvent }}</option>
-                {% endfor %}
-                </select>
-            </div>
-            
-            <div>
-                <input type="datetime-local" name="dateDebut" placeholder="Date de début" required>
-            </div>
-                
-            <div>
-                <input type="datetime-local" name="dateFin" id="dateFin" placeholder="Date de fin" required>
-            </div>
+    <textarea class="size textarea" id="descriptionEvent" name="descriptionEvent" rows="4" maxlength="500" placeholder="Description" required></textarea>
 
-            <div>
-                <input type="text" name="nomLieu" placeholder="Adresse du lieu" required>
-            </div>
-
-            <div>
-                <input type="file" name="image" id="image-input">
-            </div>
-
-            <div>
-                <input type="textarea" name="descriptionEvent" placeholder="description de l'événement" required>
-            </div>
-        </div>
-
-        <div class="second"><div id="previewImageContainer"></div></div>
-
-        <input type="submit" value="Ajouter l'événement">
-
-    </form>
-
-</div>
-
-<script src="{{ url_for('static', filename='js/ajouter_evenement.js') }}"></script>
-
+    <input class="size submit" type="submit" value="Ajouter l'événement">
+</form>
 {% endblock %}

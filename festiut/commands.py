@@ -24,9 +24,10 @@ def loaddb():
     )
     db.session.add(festival)
         
-    billetJournee = Billet(nomTypeBillet="Journée")
-    billet2Jours = Billet(nomTypeBillet="2 jours")
-    billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival")
+    billetJournee = Billet(nomTypeBillet="Journée", imageBillet= open("static/images/billetJournee.png", "rb").read())
+    billet2Jours = Billet(nomTypeBillet="2 jours", imageBillet= open("static/images/billet2Jours.png", "rb").read())
+    billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival", imageBillet= open("static/images/billetTotaliteDuFestival.png", "rb").read())
+
     db.session.add(billetJournee)
     db.session.add(billet2Jours)
     db.session.add(billetTotaliteDuFestival)

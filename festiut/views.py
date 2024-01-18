@@ -1,11 +1,12 @@
 from .app import app, login_manager
 from flask import render_template,request, redirect, url_for
-from .models import Utilisateur, save_user, Festival, Billet, db
+from .models import BilletAchete, Utilisateur, save_user, Festival, Billet, db
 from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField, PasswordField
 from wtforms . validators import DataRequired
+
 
 class LoginForm(FlaskForm):
     nom = StringField('Nom')
@@ -69,9 +70,33 @@ def logout ():
 
 @app.route("/billeterie/")
 def billeterie():
-    return render_template("billeterie.html")
+    billets = Billet.query.all()
+    return render_template("billeterie.html",
+                           billets=billets)
+
 
 @app.route("/programme/")
 def programme():
     return render_template("programme.html")
+
+@app.template_filter('str')
+def string_filter(value):
+    return str(value)
+
+@app.route("/info_billet/<int:idBillet>")
+def info_billet(idBillet):
+    billet = Billet.query.filter_by(idBillet=idBillet).first()
+    jours_disponibles = [festival.dateDebut.strftime('%Y-%m-%d') for festival in Festival.query.all()]
+    return render_template("info_billet.html",
+                           billet=billet, jours_disponibles=jours_disponibles)
+    
+@app.route("/acheter_billet/<int:idBillet>", methods =("GET","POST" ,))
+def acheter_billet(idBillet):
+    billet = Billet.query.filter_by(idBillet=idBillet).first()
+    if request.method == "POST":
+        dateDebut = request.form['dateDebut']
+        dateFin = request.form['dateFin']
+        BilletAchete.acheter_billet(id_billet=idBillet, date_debut=dateDebut, date_fin=dateFin)
+        return redirect(url_for('home'))
+    return render_template("acheter_billet.html", billet=billet)
     

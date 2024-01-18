@@ -46,6 +46,11 @@ class BilletAchete(db.Model):
     dateFin = db.Column(db.DateTime, nullable=False)
     
     billet = db.relationship('Billet', back_populates='billets_achetes')
+    
+    def acheter_billet(id_billet, date_debut, date_fin):
+        billet_achete = BilletAchete(idBilletAchete=id_billet, dateDebut=date_debut, dateFin=date_fin)
+        db.session.add(billet_achete)
+        db.session.commit()
 
     def __repr__(self):
         return f"<BilletAchete {self.idBilletAchete}: {self.dateDebut} {self.dateFin}"
@@ -74,3 +79,9 @@ def load_user(nom):
 def save_user(user):
     db.session.add(user)
     db.session.commit()
+
+
+### REQUETES SQL ###
+
+def get_info_type_billet(idBillet):
+    return Billet.query.filter_by(idBillet=idBillet).first()

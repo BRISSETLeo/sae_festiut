@@ -4,4 +4,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css')}}">
 {% endblock %}
 {% block main %}
+<p> {{ festival.nomFestival }} </p>
+{% for billet in billets %}
+    <p> {{ billet.nomTypeBillet }} </p>
+{% endfor %}
 {% endblock %}

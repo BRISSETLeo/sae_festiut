@@ -17,17 +17,57 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://ozocak:ozocak@servinfo-maria:33
 
 db = SQLAlchemy(app)
 
-from .models import Role
+from .models import Role, Festival, Billet, BilletFestival
 with app.app_context():
+    print("Deleting database tables...")
+    db.drop_all()
     print("Creating database tables...")
     db.create_all()
     
     if Role.query.count() == 0:    
         utilisateur = Role(nomRole="Utilisateur")
-        administateur = Role(nomRole="Administrateur")
+        administrateur = Role(nomRole="Administrateur")
         db.session.add(utilisateur)
-        db.session.add(administateur)
+        db.session.add(administrateur)
+
+        festival = Festival(
+            nomFestival="FestIUT'O 2ème édition",
+            dateDebut="2024-05-02 14:00:00",
+            dateFin="2024-08-02 14:00:00",
+            nomLieu="IUT de Lens"
+        )
+        db.session.add(festival)
+
+        billetJournee = Billet(nomTypeBillet="Journée")
+        billet2Jours = Billet(nomTypeBillet="2 jours")
+        billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival")
+        db.session.add(billetJournee)
+        db.session.add(billet2Jours)
+        db.session.add(billetTotaliteDuFestival)
+
         db.session.commit()
+
+        billetJourneFestival = BilletFestival(
+            idFestival=festival.idFestival,
+            idBillet=billetJournee.idBillet,
+            prix=45
+        )
+        billet2JourFestival = BilletFestival(
+            idFestival=festival.idFestival,
+            idBillet=billet2Jours.idBillet,
+            prix=80
+        )
+        billetTotaliteFestival = BilletFestival(
+            idFestival=festival.idFestival,
+            idBillet=billetTotaliteDuFestival.idBillet,
+            prix=140
+        )
+
+        db.session.add(billetJourneFestival)
+        db.session.add(billet2JourFestival)
+        db.session.add(billetTotaliteFestival)
+        db.session.commit()
+
     
 # from . models import User
 # from hashlib import sha256

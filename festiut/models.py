@@ -50,24 +50,22 @@ class BilletAchete(db.Model):
     def __repr__(self):
         return f"<BilletAchete {self.idBilletAchete}: {self.dateDebut} {self.dateFin}"
     
-class Evenement(db.Model):
-    idEvenement = db.Column(db.Integer, primary_key=True, nullable=False)
-    type_event = db.Column(db.String(25), nullable=False)
+class TypEvent(db.Model):
+    nomEvent = db.Column(db.String(25), primary_key=True, nullable=False)
+    
+    def __repr__(self):
+        return f"<TypEvent {self.nomTypEvent}>"
+    
+class Event(db.Model):
+    idEvent = db.Column(db.Integer, primary_key=True, nullable=False)
+    nomEvent = db.Column(db.String(25), db.ForeignKey('typ_event.nomEvent'), nullable=False)
     dateDebut = db.Column(db.DateTime, nullable=False)
     dateFin = db.Column(db.DateTime, nullable=False)
     nomLieu = db.Column(db.String(25), nullable=False)
-    imageEvenement = db.Column(db.LargeBinary, nullable=True)
+    imageEvent = db.Column(db.LargeBinary, nullable=True)
     
     def __repr__(self):
-        return f"<Evenement {self.type_event}: {self.dateDebut} {self.dateFin} {self.nomLieu}>"
-    
-class TypeEvent(db.Model):
-    idTypeEvent = db.Column(db.Integer, primary_key=True, nullable=False)
-    nomTypeEvent = db.Column(db.String(25), nullable=False)
-    imageTypeEvent = db.Column(db.LargeBinary, nullable=True)
-    
-    def __repr__(self):
-        return f"<TypeEvent {self.nomTypeEvent}>"
+        return f"<Event {self.nomEvent}: {self.dateDebut} {self.dateFin} {self.nomLieu}>"
 
 @login_manager.user_loader
 def load_user(nom):

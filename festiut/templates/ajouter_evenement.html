@@ -7,7 +7,7 @@
 
 <div class="parent">
 
-    <form class="form-parent" action="{{ url_for('creation_evenement') }}" method="POST">
+    <form class="form-parent" action="{{ url_for('add_evenement') }}" method="POST" enctype="multipart/form-data">
 
         <div class="first">
             <div>
@@ -35,8 +35,7 @@
             </div>
 
             <div>
-                <input type="file" id="fileInput" onchange="previewImage()">
-                <label for="fileInput">Choisir une image</label>
+                <input type="file" name="image" id="image-input">
             </div>
 
             <div>

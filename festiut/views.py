@@ -1,12 +1,13 @@
+import base64
+from markupsafe import Markup
 from .app import app, login_manager
 from flask import render_template,request, redirect, url_for
 from .models import BilletAchete, Utilisateur, save_user, Festival, Billet, db, TypeEvent, Event
 from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
-from wtforms import StringField , HiddenField, PasswordField
-from wtforms . validators import DataRequired
-
+from wtforms import StringField, PasswordField
+from datetime import datetime, timedelta
 
 class LoginForm(FlaskForm):
     nom = StringField('Nom')
@@ -109,38 +110,25 @@ def ajouter_evenement():
     types_events = TypeEvent.query.all()
     return render_template("ajouter_evenement.html", types=types_events)
 
-from datetime import datetime
-
-app.route('/admin/creation_evenement/', methods=['POST'])
-def creation_evenement():
+@app.route('/admin/add_evenement/', methods=['POST'])
+def add_evenement():
     nomEvent = request.form.get('nomEvent')
     typeEvent = request.form.get('typeEvent')
     dateDebut_str = request.form.get('dateDebut')
     dateFin_str = request.form.get('dateFin')
     nomLieu = request.form.get('nomLieu')
     descriptionEvent = request.form.get('descriptionEvent')
-    imageEvent = request.form.get('imageEvent')
+    imageEvent = request.files.get('image')
     
     dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%dT%H:%M')
     dateFin = datetime.strptime(dateFin_str, '%Y-%m-%dT%H:%M')
     
-    festival = Festival.query.first()
-    
-    dateDebutFestival = festival.dateDebut
-    dateFinFestival = festival.dateFin
-    
-    print(imageEvent, type(imageEvent))
-    
-    Event.enregistrer_nouvel_event(nom_event=nomEvent, type_event=typeEvent, date_debut=dateDebut, date_fin=dateFin, nom_lieu=nomLieu, description_event=descriptionEvent, image_event=imageEvent)
+    Event.enregistrer_nouvel_event(nom_event=nomEvent, type_event=typeEvent, date_debut=dateDebut, date_fin=dateFin, nom_lieu=nomLieu, description_event=descriptionEvent, image_event=imageEvent.read())
 
     return redirect(url_for('home'))
 
 @app.template_filter('byte_to_image')
 def byte_to_image(byte):
-    from PIL import Image
-    from io import BytesIO
-    import base64
-    
-    image_base64 = base64.b64encode(BytesIO(data).read()).decode('utf-8')
+    image_base64 = base64.b64encode(byte).decode('utf-8')
     return Markup(f'<img src="data:image/png;base64,{image_base64}" alt="Image">')
     

@@ -1,6 +1,6 @@
 from .app import app, login_manager
 from flask import render_template,request, redirect, url_for
-from .models import Utilisateur, save_user, Festival, BilletFestival, Billet, db
+from .models import Utilisateur, save_user, Festival, Billet, db
 from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
@@ -36,13 +36,7 @@ class RegisterForm(FlaskForm):
 @app.route("/")
 def home():
     festival = Festival.query.first()
-    billets = (
-        db.session.query(Billet)
-        .join(BilletFestival, BilletFestival.idBillet == Billet.idBillet)
-        .filter(BilletFestival.idFestival == festival.idFestival)
-        .all()
-    )
-    return render_template("home.html", festival=festival, billets=billets)
+    return render_template("home.html", festival=festival)
 
 @login_manager.user_loader
 def load_user(nom):

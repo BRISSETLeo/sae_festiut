@@ -5,15 +5,4 @@
 {% endblock %}
 {% block main %}
 <h2> {{ festival.nomFestival }} </h2>
-<div>
-    <div class="flexible">
-        {% for billet in billets %}
-            <div>
-                <img src="{{ url_for('static', filename='images/billet.png') }}" alt="image billet">
-                <!--billet.imageBillet--> 
-                <p> {{ billet.nomTypeBillet }} </p>
-            </div>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}

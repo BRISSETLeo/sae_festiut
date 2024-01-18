@@ -133,11 +133,6 @@ def ajouter_evenement():
     types_events = TypeEvent.query.all()
     return render_template("ajouter_evenement.html", types=types_events)
 
-from flask import request, redirect, url_for
-from datetime import datetime
-
-# ... (autres importations nécessaires)
-
 @app.route('/admin/add_evenement/', methods=['POST'])
 def add_evenement():
     nomEvent = request.form.get('nomEvent')
@@ -150,23 +145,10 @@ def add_evenement():
     
     dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%dT%H:%M')
     dateFin = datetime.strptime(dateFin_str, '%Y-%m-%dT%H:%M')
-
-    # Formatage des dates pour l'affichage dans le format "Vendredi 05 février"
-    dateDebut_formatted = dateDebut.strftime("%A %d %B")
-    dateFin_formatted = dateFin.strftime("%A %d %B")
-
-    Event.enregistrer_nouvel_event(
-        nom_event=nomEvent,
-        type_event=typeEvent,
-        date_debut=dateDebut,
-        date_fin=dateFin,
-        nom_lieu=nomLieu,
-        description_event=descriptionEvent,
-        image_event=imageEvent.read()
-    )
+    
+    Event.enregistrer_nouvel_event(nom_event=nomEvent, type_event=typeEvent, date_debut=dateDebut, date_fin=dateFin, nom_lieu=nomLieu, description_event=descriptionEvent, image_event=imageEvent.read())
 
     return redirect(url_for('home'))
-
 
 @app.template_filter('byte_to_image')
 def byte_to_image(byte):

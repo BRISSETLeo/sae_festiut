@@ -19,14 +19,14 @@ def loaddb():
     festival = Festival(
         nomFestival="FestIUT'O 2ème édition",
         dateDebut="2024-05-02 14:00:00",
-        dateFin="2024-08-02 14:00:00",
+        dateFin="2024-05-05 14:00:00",
         nomLieu="IUT de Lens"
     )
     db.session.add(festival)
         
-    billetJournee = Billet(nomTypeBillet="Journée")
-    billet2Jours = Billet(nomTypeBillet="2 jours")
-    billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival")
+    billetJournee = Billet(nomTypeBillet="Journée", imageBillet= open("static/images/Journée.png", "rb").read())
+    billet2Jours = Billet(nomTypeBillet="2 jours", imageBillet= open("static/images/2 jours.png", "rb").read())
+    billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival", imageBillet= open("static/images/Totalité du festival.png", "rb").read())
     db.session.add(billetJournee)
     db.session.add(billet2Jours)
     db.session.add(billetTotaliteDuFestival)
@@ -42,5 +42,7 @@ def loaddb():
     db.session.add(TypeEvent(nomEvent="Dédicace"))
     
     db.session.commit()    
+    
+    
     
     

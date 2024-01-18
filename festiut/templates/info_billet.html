@@ -2,17 +2,14 @@
 {% block main %}
 <form action="{{ url_for('acheter_billet', idBillet=billet.idBillet) }}" method="POST">
     <section class="Acheter_billet">
-        <label for="date">Pour quel jour</label>
+        {% if billet.nomTypeBillet == 'Journée' %}
+        <label for="date">Choissisez votre jour</label>
         <select name="dateDebut" id="dateDebut">
             {% for jour in jours_disponibles %}
                 <option value="{{ jour }}">{{ jour }}</option>
             {% endfor %}
         </select>
-        <select name="dateFin" id="dateFin">
-            {% for jour in jours_disponibles %}
-                <option value="{{ jour }}">{{ jour }}</option>
-            {% endfor %}
-        </select>
+        {% endif %}
     </section>
     <input class="valider" type="submit" id="valider" name="valider" value="Acheter le billet"/>
 </form>

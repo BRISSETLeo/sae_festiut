@@ -83,10 +83,12 @@ def programme():
 def string_filter(value):
     return str(value)
 
-@app.route("/info_billet/<int:idBillet>")
+@app.route("/info_billet/<int:idBillet>") 
 def info_billet(idBillet):
     billet = Billet.query.filter_by(idBillet=idBillet).first()
-    jours_disponibles = [festival.dateDebut.strftime('%Y-%m-%d') for festival in Festival.query.all()]
+    festival = Festival.query.first()
+    jours_disponibles = [date.strftime('%Y-%m-%d') for date in 
+                     (festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1))]
     return render_template("info_billet.html",
                            billet=billet, jours_disponibles=jours_disponibles)
     
@@ -106,7 +108,7 @@ def ajouter_evenement():
     return render_template("ajouter_evenement.html", types=types_events)
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @app.route('/creation_evenement/', methods=['get'])
 def creation_evenement():

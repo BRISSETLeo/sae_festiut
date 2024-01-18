@@ -68,7 +68,7 @@ class Event(db.Model):
     dateDebut = db.Column(db.DateTime, nullable=False)
     dateFin = db.Column(db.DateTime, nullable=False)
     nomLieu = db.Column(db.String(25), nullable=False)
-    imageEvent = db.Column(db.LargeBinary, nullable=True)
+    imageBillet = db.Column(db.LargeBinary(2**16), nullable=True)
     
     def __repr__(self):
         return f"<Event {self.nomEvent}: {self.dateDebut} {self.dateFin} {self.nomLieu}>"

@@ -53,6 +53,15 @@ class Journee(db.Model):
     
     eventsJournee = db.relationship('Event', backref='journee', lazy=True)
 
+    def enregistrer_nouvelle_journee(nomJournee, lieuJournee, date_debut):
+        journee = Journee(
+            nomFestivalJournee=nomJournee,
+            dateJournee=date_debut,
+            lieuJournee=lieuJournee
+        )
+        db.session.add(journee)
+        db.session.commit()
+
     def __repr__(self):
         return f"<Journee {self.idJournee}: {self.date} {self.idFestival}>"
 

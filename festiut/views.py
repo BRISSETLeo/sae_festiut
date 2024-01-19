@@ -220,3 +220,28 @@ def add_event():
 def voir_tous_les_evenements():
     events = Event.query.all()
     return render_template("voir_tous_les_evenements.html", events=events)
+
+@app.route('/admin/ajouter_journee/')
+def ajouter_journee():
+    lieux = Lieu.query.all()
+    festival = Festival.query.first()
+    journee = Journee.query.order_by(Journee.idJournee.desc()).first()
+    if journee is None:
+        journee = festival.dateDebutFestival
+    else:
+        journee = journee.dateJournee + timedelta(days=1)
+    return render_template("ajouter_journee.html", lieux=lieux, journee=journee)
+
+@app.route('/admin/add_journee/', methods=['POST'])
+def add_journee():
+    lieuJournee = request.form.get('lieu')
+    date_debut = request.form.get('date')
+
+    Journee.enregistrer_nouvelle_journee(nomJournee=Festival.query.first().nomFestival, date_debut=date_debut, lieuJournee=lieuJournee)
+
+    return redirect(url_for('home'))
+
+def les_jours_disponibles(festival):
+    return []
+    # return [date.strftime('%Y-%m-%d') for date in 
+    #                  (festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1))]

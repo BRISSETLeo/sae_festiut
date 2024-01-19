@@ -1,5 +1,6 @@
 from .app import db, login_manager
 from flask_login import UserMixin
+import datetime
 
 class Role(db.Model):
     nomRole = db.Column(db.String(25), primary_key=True, nullable=False)
@@ -91,6 +92,84 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event {self.nomEvent}: {self.descriptionEvent}>"
+
+class Groupe(db.Model):
+    nomGroupe = db.Column(db.String(50), primary_key=True, nullable=False)
+    styleGroupe = db.Column(db.String(50), nullable=False)
+    imageGroupe = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
+
+    artistesGroupe = db.relationship('Artiste', backref='groupe', lazy=True)
+
+    def __repr__(self):
+        return f"<Groupe {self.nomGroupe}: {self.styleGroupe}>"
+
+class Artiste(db.Model):
+    nomArtiste = db.Column(db.String(50), primary_key=True, nullable=False)
+    nomGroupeArtiste = db.Column(db.String(50), db.ForeignKey('groupe.nomGroupe'), nullable=True)
+    styleArtiste = db.Column(db.String(50), nullable=False)
+    imageArtiste = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
+
+    def __repr__(self):
+        return f"<Artiste {self.nomArtiste}: {self.styleArtiste}>"
+
+class Logement(db.Model):
+    idLogement = db.Column(db.Integer, primary_key=True, nullable=False)
+    nomLogement = db.Column(db.String(50), nullable=False)
+    adresseLogement = db.Column(db.String(50), nullable=False)
+    codePostalLogement = db.Column(db.String(5), nullable=False)
+    villeLogement = db.Column(db.String(50), nullable=False)
+    nbPlaceLogement = db.Column(db.Integer, nullable=False)
+    prixLogement = db.Column(db.Integer, nullable=False)
+    descriptionLogement = db.Column(db.String(500), nullable=False)
+
+    def __repr__(self):
+        return f"<Logement {self.nomLogement}: {self.adresseLogement} {self.codePostalLogement} {self.villeLogement}>"
+
+class ParticiperGroupe(db.Model):
+    nomGroupe = db.Column(db.String(50), db.ForeignKey('groupe.nomGroupe'), primary_key=True, nullable=False)
+    idEvent = db.Column(db.Integer, db.ForeignKey('event.idEvent'), unique=True, primary_key=True, nullable=False)
+    idLogement = db.Column(db.Integer, db.ForeignKey('logement.idLogement'), nullable=True)
+
+    def __repr__(self):
+        return f"<ParticiperGroupe {self.nomGroupe}: {self.idEvent}>"
+
+class ParticiperArtiste(db.Model):
+    nomArtiste = db.Column(db.String(50), db.ForeignKey('artiste.nomArtiste'), primary_key=True, nullable=False)
+    idEvent = db.Column(db.Integer, db.ForeignKey('event.idEvent'), unique=True, primary_key=True, nullable=False)
+    idLogement = db.Column(db.Integer, db.ForeignKey('logement.idLogement'), nullable=True)
+
+    def __repr__(self):
+        return f"<ParticiperArtiste {self.nomArtiste}: {self.idEvent}>"
+    
+class TypeLien(db.Model):
+    nomTypeLien = db.Column(db.String(50), primary_key=True, nullable=False)
+
+    def __repr__(self):
+        return f"<TypeLien {self.nomTypeLien}>"
+
+class Lien(db.Model):
+    idLien = db.Column(db.Integer, primary_key=True, nullable=False)
+    typeLien = db.Column(db.String(50), db.ForeignKey('type_lien.nomTypeLien'), nullable=False)
+    urlLien = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f"<Lien {self.typeLien}: {self.urlLien}>"
+    
+class LienGroupe(db.Model):
+    nomGroupe = db.Column(db.String(50), db.ForeignKey('groupe.nomGroupe'), primary_key=True, nullable=False)
+    idLien = db.Column(db.Integer, db.ForeignKey('lien.idLien'), unique=True, primary_key=True, nullable=False)
+    dateLien = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"<LienGroupe {self.nomGroupe}: {self.idLien}>"
+
+class LienArtiste(db.Model):
+    nomArtiste = db.Column(db.String(50), db.ForeignKey('artiste.nomArtiste'), primary_key=True, nullable=False)
+    idLien = db.Column(db.Integer, db.ForeignKey('lien.idLien'), unique=True, primary_key=True, nullable=False)
+    dateLien = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"<LienArtiste {self.nomArtiste}: {self.idLien}>"
 
 @login_manager.user_loader
 def load_user(nom):

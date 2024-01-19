@@ -7,7 +7,7 @@ def loaddb():
     print("Creating database tables...")
     db.create_all()
     
-    from .models import Role, Festival, Utilisateur, TypeEvent;
+    from .models import Role, Festival, Utilisateur, TypeEvent, TypeLien;
         
     db.session.add(Role(nomRole="Utilisateur"))
     db.session.add(Role(nomRole="Administrateur"))
@@ -39,6 +39,9 @@ def loaddb():
     db.session.add(TypeEvent(nomTypeEvent="Rencontre"))
     db.session.add(TypeEvent(nomTypeEvent="Débat"))
     db.session.add(TypeEvent(nomTypeEvent="Dédicace"))
+
+    db.session.add(TypeLien(nomTypeLien="Vidéo"))
+    db.session.add(TypeLien(nomTypeLien="Réseau"))
     
     db.session.commit()    
     

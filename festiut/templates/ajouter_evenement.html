@@ -6,11 +6,20 @@
 {% block main %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_evenement.css') }}">
 <form class="form-parent" action="{{ url_for('add_evenement') }}" method="POST" enctype="multipart/form-data">
-    <input class="size" type="text" name="nomEvent" placeholder="Nom de l'évènement" required>
 
     <select class="size" type="option" name="typeEvent" placeholder="Type d'évènement" required>
+        <option value="" disabled selected hidden>Choisissez le type de l'évènement</option>
         {% for type in types %}
             <option value="{{ type.nomEvent }}">{{ type.nomEvent }}</option>
+        {% endfor %}
+    </select>
+
+    <input class="size" type="text" name="nomEvent" placeholder="Nom de l'évènement" required>
+
+    <select class="size" type="option" name="dateDebut" placeholder="Date de début" required>
+        <option value="" disabled selected hidden>Choisissez le jour de début de l'évènement</option>
+        {% for jour in jours_disponibles %}
+            <option value="{{ jour }}">{{ jour }}</option>
         {% endfor %}
     </select>
 

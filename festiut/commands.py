@@ -1,4 +1,3 @@
-import click
 from .app import app , db
 
 @app.cli. command()
@@ -8,7 +7,7 @@ def loaddb():
     print("Creating database tables...")
     db.create_all()
     
-    from .models import Role, Festival, Billet, Utilisateur, TypeEvent;
+    from .models import Role, Festival, Utilisateur, TypeEvent;
         
     db.session.add(Role(nomRole="Utilisateur"))
     db.session.add(Role(nomRole="Administrateur"))
@@ -18,28 +17,27 @@ def loaddb():
     
     festival = Festival(
         nomFestival="FestIUT'O 2ème édition",
-        dateDebut="2024-05-02 14:00:00",
-        dateFin="2024-05-05 14:00:00",
-        nomLieu="IUT de Lens"
+        villeFestival="Orléans",
+        codePostalFestival="45000"
     )
     db.session.add(festival)
         
-    billetJournee = Billet(nomTypeBillet="Journée", imageBillet= open("static/images/Journée.png", "rb").read())
-    billet2Jours = Billet(nomTypeBillet="2 jours", imageBillet= open("static/images/2 jours.png", "rb").read())
-    billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival", imageBillet= open("static/images/Totalité du festival.png", "rb").read())
-    db.session.add(billetJournee)
-    db.session.add(billet2Jours)
-    db.session.add(billetTotaliteDuFestival)
+    # billetJournee = Billet(nomTypeBillet="Journée", imageBillet= open("static/images/Journée.png", "rb").read())
+    # billet2Jours = Billet(nomTypeBillet="2 jours", imageBillet= open("static/images/2 jours.png", "rb").read())
+    # billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival", imageBillet= open("static/images/Totalité du festival.png", "rb").read())
+    # db.session.add(billetJournee)
+    # db.session.add(billet2Jours)
+    # db.session.add(billetTotaliteDuFestival)
     
-    db.session.add(TypeEvent(nomEvent="Concert"))
-    db.session.add(TypeEvent(nomEvent="Spectacle"))
-    db.session.add(TypeEvent(nomEvent="Conférence"))
-    db.session.add(TypeEvent(nomEvent="Exposition"))
-    db.session.add(TypeEvent(nomEvent="Projection"))
-    db.session.add(TypeEvent(nomEvent="Atelier"))
-    db.session.add(TypeEvent(nomEvent="Rencontre"))
-    db.session.add(TypeEvent(nomEvent="Débat"))
-    db.session.add(TypeEvent(nomEvent="Dédicace"))
+    db.session.add(TypeEvent(nomTypeEvent="Concert"))
+    db.session.add(TypeEvent(nomTypeEvent="Spectacle"))
+    db.session.add(TypeEvent(nomTypeEvent="Conférence"))
+    db.session.add(TypeEvent(nomTypeEvent="Exposition"))
+    db.session.add(TypeEvent(nomTypeEvent="Projection"))
+    db.session.add(TypeEvent(nomTypeEvent="Atelier"))
+    db.session.add(TypeEvent(nomTypeEvent="Rencontre"))
+    db.session.add(TypeEvent(nomTypeEvent="Débat"))
+    db.session.add(TypeEvent(nomTypeEvent="Dédicace"))
     
     db.session.commit()    
     

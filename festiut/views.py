@@ -2,13 +2,14 @@ import base64
 from markupsafe import Markup
 from .app import app, login_manager
 from flask import render_template,request, redirect, url_for
-from .models import BilletAchete, Utilisateur, save_user, Festival, Billet, db, TypeEvent, Event
+from .models import Utilisateur, save_user, Festival, db, TypeEvent, Event
 from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from datetime import datetime, timedelta
 from itertools import combinations
+from sqlalchemy.sql.expression import func
 
 class LoginForm(FlaskForm):
     nom = StringField('Nom')
@@ -39,9 +40,8 @@ class RegisterForm(FlaskForm):
 @app.route("/")
 def home():
     festival = Festival.query.first()
-    concert = Event.query.filter_by().first()
-    print(concert)
-    return render_template("home.html", festival=festival, concert=concert)
+    events = Event.query.order_by(func.random()).limit(3).all()
+    return render_template("home.html", festival=festival, events=events)
 
 @login_manager.user_loader
 def load_user(nom):
@@ -91,8 +91,7 @@ def string_filter(value):
 def info_billet(idBillet):
     billet = Billet.query.filter_by(idBillet=idBillet).first()
     festival = Festival.query.first()
-    jours_disponibles = [date.strftime('%Y-%m-%d') for date in 
-                     (festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1))]
+    jours_disponibles = les_jours_disponibles(festival)
     combinaisons_jours = list(combinations(jours_disponibles, 2))
     combinaisons_successives = [comb for comb in combinaisons_jours if jours_disponibles.index(comb[0]) == jours_disponibles.index(comb[1]) - 1]
 
@@ -128,10 +127,11 @@ def acheter_billet(idBillet):
         return redirect(url_for('home'))
     return render_template("acheter_billet.html", billet=billet)
     
-@app.route("/admin/ajouter_evenement")
+@app.route("/admin/ajouter_evenement/")
 def ajouter_evenement():
     types_events = TypeEvent.query.all()
-    return render_template("ajouter_evenement.html", types=types_events)
+    jours_disponibles = les_jours_disponibles(Festival.query.first())
+    return render_template("ajouter_evenement.html", types=types_events, jours_disponibles=jours_disponibles)
 
 @app.route('/admin/add_evenement/', methods=['POST'])
 def add_evenement():
@@ -146,6 +146,10 @@ def add_evenement():
     dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%dT%H:%M')
     dateFin = datetime.strptime(dateFin_str, '%Y-%m-%dT%H:%M')
     
+    festival = Festival.query.first()
+    dateDebFestival = festival.dateDebut
+    dateFinFestival = festival.dateFin 
+
     Event.enregistrer_nouvel_event(nom_event=nomEvent, type_event=typeEvent, date_debut=dateDebut, date_fin=dateFin, nom_lieu=nomLieu, description_event=descriptionEvent, image_event=imageEvent.read())
 
     return redirect(url_for('home'))
@@ -155,3 +159,6 @@ def byte_to_image(byte):
     image_base64 = base64.b64encode(byte).decode('utf-8')
     return Markup(f'<img src="data:image/png;base64,{image_base64}" alt="Image">')
     
+def les_jours_disponibles(festival):
+    return [date.strftime('%Y-%m-%d') for date in 
+                     (festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1))]

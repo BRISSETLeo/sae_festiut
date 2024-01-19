@@ -378,7 +378,5 @@ def voir_tous_les_logements():
 
 @app.errorhandler(Exception)
 def handle_all_exceptions(error):
-    print(f'Erreur détectée : {error}')
-    db.session.rollback()
-    app.logger.error(f'Database Error: {error}')
+    app.logger.error(f'Erreur détectée: {error}', exc_info=True)
     return redirect(url_for('home'))

@@ -7,16 +7,16 @@
 <form action="" method="POST">
     <section class="Acheter_billet">
         <h1>Acheter un billet</h1>
-        {% if billet == 'Journée' %}
+        {% if billet == 'Journée' or billet == 'Totalité du festival' %}
         <p>Vous avez choisi un billet journée</p>
         <p>Voici les journées disponibles : </p>
         {% for jour in jours_disponibles %}
         <p>{{ jour }}</p>
         {% endfor %}
-        {% else if billet == '2 jours' %}
+        {% elif billet == '2 jours' %}
         <p>Vous avez choisi un billet 2 jours</p>
         <p>Voici les journées disponibles : </p>
-        {% for jour in jours_disponibles %}
+        {% for jour in duo_disponible %}
         <p>{{ jour }}</p>
         {% endfor %}
         {% endif %}

@@ -78,11 +78,6 @@ def billeterie():
     return render_template("billeterie.html",
                            billets=billets)
 
-
-@app.route("/programme/")
-def programme():
-    return render_template("programme.html")
-
 @app.template_filter('str')
 def string_filter(value):
     return str(value)

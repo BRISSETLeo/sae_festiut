@@ -18,7 +18,8 @@ def loaddb():
     festival = Festival(
         nomFestival="FestIUT'O 2ème édition",
         villeFestival="Orléans",
-        codePostalFestival="45000"
+        codePostalFestival="45000",
+        dateDebutFestival="2024-01-19"
     )
     db.session.add(festival)
         

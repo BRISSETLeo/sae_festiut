@@ -166,3 +166,17 @@ def byte_to_image(byte):
 def les_jours_disponibles(festival):
     return [date.strftime('%Y-%m-%d') for date in 
                      (festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1))]
+
+@app.route("/admin/ajouter_lieu/")
+def ajouter_lieu():
+    return render_template("ajouter_lieu.html")
+
+@app.route('/admin/add_lieu/', methods=['POST'])
+def add_lieu():
+    nomLieu = request.form.get('nomLieu')
+    adresseLieu = request.form.get('adresseLieu')
+    nbPlaceLieu = request.form.get('nbPlaceLieu')
+    
+    #Lieu.enregistrer_nouveau_lieu(nom_lieu=nomLieu, adresse_lieu=adresseLieu, nb_place_lieu=nbPlaceLieu)
+
+    return redirect(url_for('home'))

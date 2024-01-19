@@ -22,6 +22,7 @@ class Festival(db.Model):
     nomFestival = db.Column(db.String(50), primary_key=True, nullable=False)
     villeFestival = db.Column(db.String(50), nullable=False)
     codePostalFestival = db.Column(db.String(5), nullable=False)
+    dateDebutFestival = db.Column(db.Date, nullable=False)
 
     journeesFestival = db.relationship('Journee', backref='festival', lazy=True)
 
@@ -42,7 +43,7 @@ class Lieu(db.Model):
 class Journee(db.Model):
     idJournee = db.Column(db.Integer, primary_key=True, nullable=False)
     nomFestivalJournee = db.Column(db.String(50), db.ForeignKey('festival.nomFestival'), nullable=False)
-    dateJournee = db.Column(db.DateTime, nullable=False)
+    dateJournee = db.Column(db.Date, nullable=False)
     lieuJournee = db.Column(db.String(50), db.ForeignKey('lieu.nomLieu'), nullable=False)
     
     eventsJournee = db.relationship('Event', backref='journee', lazy=True)

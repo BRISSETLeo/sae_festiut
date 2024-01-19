@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/voir_tous_les_evenements.css') }}">
+
+{% for logement in logements %}
+<h5>{{ logement.nomLogement }}</h5>
+<p>{{ logement.adresseLogement }}</p>
+<p>{{ logement.codePostalLogement }}</p>
+<p>{{ logement.villeLogement }}</p>
+<p>{{ logement.nbPlaceLogement }}</p>
+<p>{{ logement.prixLogement }}</p>
+<p>{{ logement.descriptionLogement }}</p>
+{% endfor %}
+{% endblock %}

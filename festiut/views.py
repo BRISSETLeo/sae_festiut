@@ -297,6 +297,30 @@ def voir_tous_les_groupes():
     groupes = Groupe.query.all()
     return render_template("voir_les_groupes.html", groupes=groupes)
 
+@app.route("/admin/ajouter_logement/")
+def ajouter_logement():
+    return render_template("ajouter_logement.html")
+
+@app.route('/admin/add_logement/', methods=['POST'])
+def add_logement():
+    nomLogement = request.form.get('nomLogement')
+    adresseLogement = request.form.get('adresseLogement')
+    codePostalLogement = request.form.get('codePostalLogement')
+    villeLogement = request.form.get('villeLogement')
+    nbPlaceLogement = request.form.get('nbPlaceLogement')
+    prixLogement = request.form.get('prixLogement')
+    descriptionLogement = request.form.get('descriptionLogement')
+
+    Logement.enregistrer_nouveau_logement(nomLogement=nomLogement, adresseLogement=adresseLogement, codePostalLogement=codePostalLogement, villeLogement=villeLogement, nbPlaceLogement=nbPlaceLogement, prixLogement=prixLogement, descriptionLogement=descriptionLogement)
+
+    return redirect(url_for('home'))
+
+@app.route("/admin/voir_tous_les_logements/")
+def voir_tous_les_logements():
+    logements = Logement.query.all()
+    return render_template("voir_tous_les_logements.html", logements=logements)
+
+
 def les_jours_disponibles(festival):
     return []
     # return [date.strftime('%Y-%m-%d') for date in 

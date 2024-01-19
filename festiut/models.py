@@ -140,6 +140,11 @@ class Logement(db.Model):
     prixLogement = db.Column(db.Integer, nullable=False)
     descriptionLogement = db.Column(db.String(500), nullable=False)
 
+    def enregistrer_nouveau_logement(nomLogement, adresseLogement, codePostalLogement, villeLogement, nbPlaceLogement, prixLogement, descriptionLogement):
+        logement = Logement(nomLogement=nomLogement, adresseLogement=adresseLogement, codePostalLogement=codePostalLogement, villeLogement=villeLogement, nbPlaceLogement=nbPlaceLogement, prixLogement=prixLogement, descriptionLogement=descriptionLogement)
+        db.session.add(logement)
+        db.session.commit()
+
     def __repr__(self):
         return f"<Logement {self.nomLogement}: {self.adresseLogement} {self.codePostalLogement} {self.villeLogement}>"
 

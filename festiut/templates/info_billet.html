@@ -13,6 +13,12 @@
         {% for jour in jours_disponibles %}
         <p>{{ jour }}</p>
         {% endfor %}
+        {% else if billet == '2 jours' %}
+        <p>Vous avez choisi un billet 2 jours</p>
+        <p>Voici les journées disponibles : </p>
+        {% for jour in jours_disponibles %}
+        <p>{{ jour }}</p>
+        {% endfor %}
         {% endif %}
         <label for="prix">Prix du billet :</label>
         <label for="quantite">Quantité :</label>

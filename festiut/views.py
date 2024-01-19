@@ -10,6 +10,7 @@ from wtforms import StringField, PasswordField
 from datetime import datetime, timedelta, time
 from itertools import combinations
 from sqlalchemy.sql.expression import func
+from sqlalchemy.exc import IntegrityError
 
 class LoginForm(FlaskForm):
     nom = StringField('Nom')
@@ -269,7 +270,9 @@ def ajouter_journee():
     lieux = []
 
     for lieu in Lieu.query.all():
-        if journee.lieuJournee != lieu.nomLieu:
+        if journee is None:
+            lieux.append(lieu)
+        elif journee.lieuJournee != lieu.nomLieu:
             lieux.append(lieu)
 
     festival = Festival.query.first()
@@ -373,8 +376,9 @@ def voir_tous_les_logements():
     logements = Logement.query.all()
     return render_template("voir_tous_les_logements.html", logements=logements)
 
-
-def les_jours_disponibles(festival):
-    return []
-    # return [date.strftime('%Y-%m-%d') for date in 
-    #                  (festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1))]
+@app.errorhandler(Exception)
+def handle_all_exceptions(error):
+    print(f'Erreur détectée : {error}')
+    db.session.rollback()
+    app.logger.error(f'Database Error: {error}')
+    return redirect(url_for('home'))

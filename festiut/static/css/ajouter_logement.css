@@ -1,8 +1,8 @@
-.container {
+.container{
     text-align: center;
 }
 
-.parent {
+.parent{
     margin: 1em;
     text-align: center;
     font-size: 1.3em;
@@ -12,12 +12,11 @@
     background-color: #fffbe4;
 }
 
-form div {
+form div{
     margin-top: 1em;
 }
 
-input,
-select {
+input{
     background-color: #fffbe4;
     width: 40%;
     height: 2em;
@@ -27,11 +26,7 @@ select {
     font-size: 1em;
 }
 
-select {
-    padding: 0.1em;
-}
-
-button {
+button{
     font-size: 2em;
     margin: 0.4em;
     background: none;
@@ -39,15 +34,15 @@ button {
     border-radius: 0.5em;
 }
 
-button:hover {
+button:hover{
     background: red;
     border-width: 0.1em;
-    border-style: solid;
+    border-style: solid; 
     border-color: red;
     cursor: pointer;
 }
 
-.voir {
+.voir{
     text-decoration: none;
     color: #000;
     cursor: pointer;
@@ -56,8 +51,8 @@ button:hover {
     font-size: 1.1em;
 }
 
-.voir:hover {
+.voir:hover{
     border-width: 0 0 0.1em 0;
-    border-style: solid;
+    border-style: solid; 
     border-color: red;
 }

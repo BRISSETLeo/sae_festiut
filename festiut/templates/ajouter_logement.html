@@ -4,42 +4,44 @@
 {{ super() }}
 {% endblock %}
 {% block main %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_lieu.css') }}">
-<form class="form-parent" action="{{ url_for('add_logement') }}" method="POST" enctype="multipart/form-data">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_logement.css') }}">
+<div class="container">
+    <div class="parent">
+        <form class="form-parent" action="{{ url_for('add_logement') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nomLogement">Nom du logement</label>
+                <input type="text" id="nomLogement" name="nomLogement" placeholder="Nom du logement" required>
+            </div>
+            <div class="form-group">
+                <label for="adresseLogement">Adresse du logement</label>
+                <input type="text" id="adresseLogement" name="adresseLogement" placeholder="Adresse du logement" required>
+            </div>
+            <div class="form-group">
+                <label for="codePostalLogement">Code postal du logement</label>
+                <input type="text" id="codePostalLogement" name="codePostalLogement" placeholder="Code postal du logement" required>
+            </div>
+            <div class="form-group">
+                <label for="villeLogement">Ville du logement</label>
+                <input type="text" id="villeLogement" name="villeLogement" placeholder="Ville du logement" required>
+            </div>
+            <div class="form-group">
+                <label for="nbPlaceLogement">Nombre de places du logement</label>
+                <input type="number" min="1" id="nbPlaceLogement" name="nbPlaceLogement" placeholder="Nombre de places du logement" required>
+            </div>
+            <div class="form-group">
+                <label for="prixLogement">Prix du logement</label>
+                <input type="number" id="prixLogement" name="prixLogement" placeholder="Prix du logement" required>
+            </div>
+            <div class="form-group">
+                <label for="descriptionLogement">Description du logement</label>
+                <input type="text" id="descriptionLogement" name="descriptionLogement" placeholder="Description du logement" required>
+            </div>
+        
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
+    </div>
 
-    <div class="form-group">
-        <label for="nomLogement">Nom du logement</label>
-        <input type="text" id="nomLogement" name="nomLogement" placeholder="Nom du logement" required>
-    </div>
-    <div class="form-group">
-        <label for="adresseLogement">Adresse du logement</label>
-        <input type="text" id="adresseLogement" name="adresseLogement" placeholder="Adresse du logement" required>
-    </div>
-    <div class="form-group">
-        <label for="codePostalLogement">Code postal du logement</label>
-        <input type="text" id="codePostalLogement" name="codePostalLogement" placeholder="Code postal du logement" required>
-    </div>
-    <div class="form-group">
-        <label for="villeLogement">Ville du logement</label>
-        <input type="text" id="villeLogement" name="villeLogement" placeholder="Ville du logement" required>
-    </div>
-    <div class="form-group">
-        <label for="nbPlaceLogement">Nombre de places du logement</label>
-        <input type="number" id="nbPlaceLogement" name="nbPlaceLogement" placeholder="Nombre de places du logement" required>
-    </div>
-    <div class="form-group">
-        <label for="prixLogement">Prix du logement</label>
-        <input type="number" id="prixLogement" name="prixLogement" placeholder="Prix du logement" required>
-    </div>
-    <div class="form-group">
-        <label for="descriptionLogement">Description du logement</label>
-        <input type="text" id="descriptionLogement" name="descriptionLogement" placeholder="Description du logement" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Ajouter</button>
-
-</form>
-
-<a href="{{ url_for('voir_tous_les_logements') }}">Voir tous les logements</a>
+    <a class="voir" href="{{ url_for('voir_tous_les_logements') }}">Voir tous les logements</a>
+</div>
 
 {% endblock %}

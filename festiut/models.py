@@ -211,24 +211,3 @@ def load_user(nom):
 def save_user(user):
     db.session.add(user)
     db.session.commit()
-
-
-# Vérifier qu'il n'y a pas de chevauchement de dates pour un même lieu et une même journée
-
-def prevent_overlap_dates(mapper, connection, target):
-    overlap_count = connection.execute(
-        f"SELECT COUNT(*) FROM event "
-        f"WHERE lieuEvent = '{target.lieuEvent}' "
-        f"AND journeeEvent = {target.journeeEvent} "
-        f"AND ("
-        f"(TIME('{target.heureDebutEvent}') < heureFinEvent AND TIME('{target.heureFinEvent}') > heureDebutEvent) "
-        f"OR (heureDebutEvent < TIME('{target.heureFinEvent}') AND heureFinEvent > TIME('{target.heureDebutEvent}')) "
-        f"OR (heureDebutEvent = TIME('{target.heureDebutEvent}') AND heureFinEvent = TIME('{target.heureFinEvent}'))"
-        f")"
-    ).scalar()
-
-    if overlap_count > 0:
-        raise ValueError('Chevauchement de dates détecté pour le même lieu et la même journée')
-
-# Écouter l'événement "before_insert" pour le modèle Event
-listen(Event, 'before_insert', prevent_overlap_dates)

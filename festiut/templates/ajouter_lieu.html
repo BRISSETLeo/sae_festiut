@@ -5,24 +5,28 @@
 {% endblock %}
 {% block main %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_lieu.css') }}">
-<form class="form-parent" action="{{ url_for('add_lieu') }}" method="POST" enctype="multipart/form-data">
+<div class="container">
+    <div class="parent">
+        <form class="form-parent" action="{{ url_for('add_lieu') }}" method="POST" enctype="multipart/form-data">
 
-    <div class="form-group">
-        <label for="nomLieu">Nom du lieu</label>
-        <input type="text" class="form-control" id="nomLieu" name="nomLieu" placeholder="Nom du lieu" required>
+            <div class="form-group">
+                <label for="nomLieu">Nom du lieu</label>
+                <input type="text" class="form-control" id="nomLieu" name="nomLieu" placeholder="Nom du lieu" required>
+            </div>
+            <div class="form-group">
+                <label for="adresseLieu">Adresse du lieu</label>
+                <input type="text" class="form-control" id="adresseLieu" name="adresseLieu" placeholder="Adresse du lieu" required>
+            </div>
+            <div class="form-group">
+                <label for="nbPlaceLieu">Nombre de place du lieu</label>
+                <input type="number" min="-1" class="form-control" id="nbPlaceLieu" name="nbPlaceLieu" placeholder="Nombre de place du lieu" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        
+        </form>
     </div>
-    <div class="form-group">
-        <label for="adresseLieu">Adresse du lieu</label>
-        <input type="text" class="form-control" id="adresseLieu" name="adresseLieu" placeholder="Adresse du lieu" required>
-    </div>
-    <div class="form-group">
-        <label for="nbPlaceLieu">Nombre de place du lieu</label>
-        <input type="number" min="-1" class="form-control" id="nbPlaceLieu" name="nbPlaceLieu" placeholder="Nombre de place du lieu" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Ajouter</button>
-
-</form>
-
-<a href="{{ url_for('voir_les_lieux') }}">Voir tous les lieux</a>
+    
+    <a class="voir" href="{{ url_for('voir_les_lieux') }}">Voir tous les lieux</a>
+</div>
 
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_groupe.css') }}">
+<form class="form-parent" action="{{ url_for('add_groupe') }}" method="POST" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label for="nomGroupe">Nom du groupe</label>
+        <input type="text" class="form-control" id="nomGroupe" name="nomGroupe" placeholder="Nom du groupe" required>
+    </div>
+    <div class="form-group">
+        <label for="descriptionGroupe">styleGroupe</label>
+        <select id="styleGroupe" name="styleGroupe">
+            {% for style in styles %}
+            <option value="{{ style.nomStyleMusique }}">{{ style.nomStyleMusique }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="imageGroupe">Image du groupe</label>
+        <input type="file" class="form-control" id="imageGroupe" name="imageGroupe" placeholder="Image du groupe">
+    </div>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+
+</form>
+<a href="{{ url_for('voir_tous_les_groupes') }}">Voir la liste des liste_groupes</a>
+
+{% endblock %}

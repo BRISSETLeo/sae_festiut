@@ -272,6 +272,31 @@ def voir_tous_les_artistes():
     artistes = Artiste.query.all()
     return render_template("voir_tous_les_artistes.html", artistes=artistes)
 
+@app.route("/admin/ajouter_groupe/")
+def ajouter_groupe():
+    styles = StyleMusique.query.all()
+    artiste = Artiste.query.all()
+    return render_template("ajouter_groupe.html", styles=styles, artiste=artiste)
+
+@app.route('/admin/add_groupe/', methods=['POST'])
+def add_groupe():
+    nomGroupe = request.form.get('nomGroupe')
+    styleGroupe = request.form.get('styleGroupe')
+    imageGroupe = request.files.get('imageGroupe')
+    
+    byte = None
+    if imageGroupe:
+        byte = imageGroupe.read()
+
+    Groupe.enregistrer_nouveau_groupe(nomGroupe=nomGroupe, styleGroupe=styleGroupe, imageGroupe=byte)
+
+    return redirect(url_for('home'))
+
+@app.route("/admin/voir_tous_les_groupes/")
+def voir_tous_les_groupes():
+    groupes = Groupe.query.all()
+    return render_template("voir_les_groupes.html", groupes=groupes)
+
 def les_jours_disponibles(festival):
     return []
     # return [date.strftime('%Y-%m-%d') for date in 

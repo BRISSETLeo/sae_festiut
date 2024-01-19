@@ -10,6 +10,7 @@
     <a href="{{ url_for('ajouter_event') }}" class="">Ajouter un évènement</a>
     <a href="{{ url_for('ajouter_journee') }}" class="">Ajouter une journée</a>
     <a href="{{ url_for('ajouter_artiste') }}" class="">Ajouter un artiste</a>
+    <a href="{{ url_for('ajouter_groupe') }}" class="">Ajouter un groupe</a>
 {% endif %}
 {% for event in events %}
 <p>{{ event.nomEvent }}</p>

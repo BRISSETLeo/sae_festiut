@@ -108,6 +108,11 @@ class Groupe(db.Model):
         db.session.add(groupe)
         db.session.commit()
 
+    def enregistrer_nouveau_groupe(nomGroupe, styleGroupe, imageGroupe):
+        groupe = Groupe(nomGroupe=nomGroupe, styleGroupe=styleGroupe, imageGroupe=imageGroupe)
+        db.session.add(groupe)
+        db.session.commit()
+
     def __repr__(self):
         return f"<Groupe {self.nomGroupe}: {self.styleGroupe}>"
 

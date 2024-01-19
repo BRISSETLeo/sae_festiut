@@ -7,25 +7,32 @@
 <form action="{{ url_for('acheter_billet', idBillet=billet.idBillet) }}" method="POST">
     <section class="Acheter_billet">
         {% if billet.nomTypeBillet == 'Journée' %}
-        <label for="dateDebut">Choisissez votre jour</label>
-        <select name="dateDebut" id="dateDebut">
-            {% for jour in jours_disponibles %}
-                <option value="{{ jour }}">{{ jour }}</option>
-            {% endfor %}
-        </select>
+            <label for="dateDebut">Choisissez votre jour</label>
+            <select name="dateDebut" id="dateDebut">
+                {% for jour in jours_disponibles %}
+                    <option value="{{ jour }}">{{ jour }}</option>
+                {% endfor %}
+            </select>
         {% endif %}
+
         {% if billet.nomTypeBillet == '2 jours' %}
-        <select name="dateDebut" id="dateDebut">
-            {% for jour in duo_disponible %}
-                <option value="{{ jour }}">{{ jour }}</option>
-            {% endfor %}
+            <label for="dateDebut">Choisissez votre premier jour</label>
+            <select name="dateDebut" id="dateDebut">
+                {% for jour in duo_disponible %}
+                    <option value="{{ jour }}">{{ jour }}</option>
+                {% endfor %}
+            </select>
         {% endif %}
+
         {% if billet.nomTypeBillet == 'Totalité du festival' %}
+            <p>Ce billet couvre l'ensemble du festival.</p>
         {% endif %}
+
         <label for="prix">Prix du billet :</label>
         <label for="quantite">Quantité :</label>
-        <input type="number" name="quantite" id="quantite" value="1" min="1"  max="3" required>
+        <input type="number" name="quantite" id="quantite" value="1" min="1" max="3" required>
     </section>
     <input class="valider" type="submit" id="valider" name="valider" value="Acheter le billet"/>
 </form>
+
 {% endblock %}

@@ -91,12 +91,21 @@ def string_filter(value):
 def info_billet(idBillet):
     billet = Billet.query.filter_by(idBillet=idBillet).first()
     festival = Festival.query.first()
-    jours_disponibles = les_jours_disponibles(festival)
-    combinaisons_jours = list(combinations(jours_disponibles, 2))
-    combinaisons_successives = [comb for comb in combinaisons_jours if jours_disponibles.index(comb[0]) == jours_disponibles.index(comb[1]) - 1]
+    
+    jours_disponibles = [festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1)]
+
+    jours_disponibles_formates = [date.strftime('%A %d %B') for date in jours_disponibles]
+
+    combinaisons_jours = list(combinations(jours_disponibles_formates, 2))
+    combinaisons_successives = [comb for comb in combinaisons_jours if jours_disponibles_formates.index(comb[0]) == jours_disponibles_formates.index(comb[1]) - 1]
 
     return render_template("info_billet.html",
-                           billet=billet, jours_disponibles=jours_disponibles, duo_disponible=combinaisons_successives)
+                           billet=billet, jours_disponibles=jours_disponibles_formates, duo_disponible=combinaisons_successives)
+
+@app.route("/programme")
+def programme():
+    events = Event.query.all()
+    return render_template("programme.html", events=events)
     
 @app.route("/acheter_billet/<int:idBillet>", methods =("GET","POST" ,))
 def acheter_billet(idBillet):

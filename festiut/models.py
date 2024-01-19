@@ -62,7 +62,7 @@ class Event(db.Model):
     typeEvent = db.Column(db.String(50), db.ForeignKey('type_event.nomTypeEvent'), nullable=False)
     lieuEvent = db.Column(db.String(50), db.ForeignKey('lieu.nomLieu'), nullable=False)
     descriptionEvent = db.Column(db.String(500), nullable=False)
-    imageEventEvent = db.Column(db.LargeBinary, nullable=False)
+    imageEventEvent = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
     estGratuit = db.Column(db.Boolean, nullable=False)
 
     journeeEvent = db.Column(db.Integer, db.ForeignKey('journee.idJournee'), nullable=False)

@@ -8,7 +8,7 @@ def loaddb():
     print("Creating database tables...")
     db.create_all()
     
-    from .models import Role, Festival, Utilisateur, TypeEvent, TypeLien, StyleMusique;
+    from .models import Role, Festival, Utilisateur, TypeEvent, TypeLien, StyleMusique, TypeBillet;
         
     db.session.add(Role(nomRole="Utilisateur"))
     db.session.add(Role(nomRole="Administrateur"))
@@ -24,12 +24,20 @@ def loaddb():
     )
     db.session.add(festival)
         
-    # billetJournee = Billet(nomTypeBillet="Journée", imageBillet= open("static/images/Journée.png", "rb").read())
-    # billet2Jours = Billet(nomTypeBillet="2 jours", imageBillet= open("static/images/2 jours.png", "rb").read())
-    # billetTotaliteDuFestival = Billet(nomTypeBillet="Totalité du festival", imageBillet= open("static/images/Totalité du festival.png", "rb").read())
-    # db.session.add(billetJournee)
-    # db.session.add(billet2Jours)
-    # db.session.add(billetTotaliteDuFestival)
+    billetJournee = TypeBillet(
+        nomTypeBillet="Journée",
+        prixBillet=49
+    )
+
+    billet2Jours = TypeBillet(
+        nomTypeBillet="2 jours",
+        prixBillet=70
+    )
+
+    billetTotaliteDuFestival = TypeBillet(
+        nomTypeBillet="Totalité du festival",
+        prixBillet=90
+    )
     
     db.session.add(TypeEvent(nomTypeEvent="Concert"))
     db.session.add(TypeEvent(nomTypeEvent="Spectacle"))

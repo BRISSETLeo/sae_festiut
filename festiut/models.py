@@ -1,5 +1,6 @@
 from .app import db, login_manager
 from flask_login import UserMixin
+from sqlalchemy.event import listen
 
 class Role(db.Model):
     nomRole = db.Column(db.String(25), primary_key=True, nullable=False)
@@ -26,9 +27,6 @@ class Festival(db.Model):
 
     journeesFestival = db.relationship('Journee', backref='festival', lazy=True)
 
-    def __repr__(self):
-        return f"<Festival {self.nomFestival}: {self.ville} {self.codePostal}>"
-
 class Lieu(db.Model):
     nomLieu = db.Column(db.String(50), primary_key=True, nullable=False)
     adresseLieu = db.Column(db.String(50), nullable=False)
@@ -41,9 +39,6 @@ class Lieu(db.Model):
         lieu = Lieu(nomLieu=nomLieu, adresseLieu=adresseLieu, nbPlaceLieu=nbPlaceLieu)
         db.session.add(lieu)
         db.session.commit()
-    
-    def __repr__(self):
-        return f"<Lieu {self.nomLieu}: {self.adresse} {self.ville} {self.codePostal}>"
 
 class Journee(db.Model):
     idJournee = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -61,9 +56,6 @@ class Journee(db.Model):
         )
         db.session.add(journee)
         db.session.commit()
-
-    def __repr__(self):
-        return f"<Journee {self.idJournee}: {self.date} {self.idFestival}>"
 
 class TypeEvent(db.Model):
     nomTypeEvent = db.Column(db.String(50), primary_key=True, nullable=False)
@@ -85,12 +77,9 @@ class Event(db.Model):
     journeeEvent = db.Column(db.Integer, db.ForeignKey('journee.idJournee'), nullable=False)
 
     def enregistrer_nouvel_event(nomEvent, typeEvent, lieuEvent, heureDebutEvent, heureFinEvent, descriptionEvent, imageEvent, estGratuit, journeeEvent):
-        event = Event(nomEvent=nomEvent, typeEvent=typeEvent, lieuEvent=lieuEvent, heureDebutEvent=heureDebutEvent, heureFinEvent=heureFinEvent, descriptionEvent=descriptionEvent, imageEvent=imageEvent, estGratuit=estGratuit, journeeEvent=journeeEvent)
+        event = Event(nomEvent=nomEvent, typeEvent=typeEvent, lieuEvent=lieuEvent, heureDebutEvent=heureDebutEvent, heureFinEvent=heureFinEvent, descriptionEvent=descriptionEvent, imageEvent=imageEvent, estGratuit=bool(estGratuit), journeeEvent=journeeEvent)
         db.session.add(event)
         db.session.commit()
-
-    def __repr__(self):
-        return f"<Event {self.nomEvent}: {self.descriptionEvent}>"
 
 class StyleMusique(db.Model):
     nomStyleMusique = db.Column(db.String(50), primary_key=True, nullable=False)
@@ -112,9 +101,6 @@ class Groupe(db.Model):
         groupe = Groupe(nomGroupe=nomGroupe, styleGroupe=styleGroupe, imageGroupe=imageGroupe)
         db.session.add(groupe)
         db.session.commit()
-
-    def __repr__(self):
-        return f"<Groupe {self.nomGroupe}: {self.styleGroupe}>"
 
 class Artiste(db.Model):
     nomArtiste = db.Column(db.String(50), primary_key=True, nullable=False)
@@ -197,6 +183,7 @@ class LienArtiste(db.Model):
 class TypeBillet (db.Model):
     nomTypeBillet = db.Column(db.String(50), primary_key=True, nullable=False)
     prixBillet = db.Column(db.Integer, nullable=False)
+    imageBillet = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
 
     def __repr__(self):
         return f"<TypeBillet {self.nomTypeBillet}>"
@@ -204,11 +191,15 @@ class TypeBillet (db.Model):
 class Billet(db.Model):
     idAchat = db.Column(db.Integer, primary_key=True, nullable=False)
     typeBillet = db.Column(db.String(50), db.ForeignKey('type_billet.nomTypeBillet'), nullable=False)
-    nomUser = db.Column(db.String(25), db.ForeignKey('utilisateur.nom'), nullable=False)
-    nbPlaceBillet = db.Column(db.Integer, nullable=False)
+    nomUser = db.Column(db.String(25), db.ForeignKey('utilisateur.nom'), nullable=False)    
     dateAchat = db.Column(db.DateTime, nullable=False)
     dateDebut = db.Column(db.DateTime, nullable=False)
     dateFin = db.Column(db.DateTime, nullable=False)
+
+    def acheter_billet(typeBillet, nomUser, dateAchat, dateDebut, dateFin):
+        billet = Billet(typeBillet=typeBillet, nomUser=nomUser, dateAchat=dateAchat, dateDebut=dateDebut, dateFin=dateFin)
+        db.session.add(billet)
+        db.session.commit()
 
     def __repr__(self):
         return f"<Billet {self.idBillet}: {self.typeBillet}>"
@@ -222,4 +213,22 @@ def save_user(user):
     db.session.commit()
 
 
-### REQUETES SQL ###
+# Vérifier qu'il n'y a pas de chevauchement de dates pour un même lieu et une même journée
+
+def prevent_overlap_dates(mapper, connection, target):
+    overlap_count = connection.execute(
+        f"SELECT COUNT(*) FROM event "
+        f"WHERE lieuEvent = '{target.lieuEvent}' "
+        f"AND journeeEvent = {target.journeeEvent} "
+        f"AND ("
+        f"(TIME('{target.heureDebutEvent}') < heureFinEvent AND TIME('{target.heureFinEvent}') > heureDebutEvent) "
+        f"OR (heureDebutEvent < TIME('{target.heureFinEvent}') AND heureFinEvent > TIME('{target.heureDebutEvent}')) "
+        f"OR (heureDebutEvent = TIME('{target.heureDebutEvent}') AND heureFinEvent = TIME('{target.heureFinEvent}'))"
+        f")"
+    ).scalar()
+
+    if overlap_count > 0:
+        raise ValueError('Chevauchement de dates détecté pour le même lieu et la même journée')
+
+# Écouter l'événement "before_insert" pour le modèle Event
+listen(Event, 'before_insert', prevent_overlap_dates)

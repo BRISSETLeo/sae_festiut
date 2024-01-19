@@ -5,7 +5,7 @@
     {% for i in range(billets|length) %}
         <div class="billet">
             <div class="div_img">
-                <a href="{{ url_for('info_billet', idBillet=billets[i].idBillet) }}">
+                <a href="{{ url_for('info_billet', nomTypeBillet=billets[i].nomTypeBillet) }}">
                     <img class="img_acc" src="{{ url_for('static', filename='images/' + billets[i].nomTypeBillet|str + '.png') }}" alt="img">
                 </a>
             </div>

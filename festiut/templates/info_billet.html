@@ -4,24 +4,15 @@
 {% endblock %}
 {% block main %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/info_billet.css') }}">
-<form action="{{ url_for('acheter_billet', idBillet=billet.idBillet) }}" method="POST">
+<form action="" method="POST">
     <section class="Acheter_billet">
-        {% if billet.nomTypeBillet == 'Journée' %}
-        <label for="dateDebut">Choisissez votre jour</label>
-        <select name="dateDebut" id="dateDebut">
-            {% for jour in jours_disponibles %}
-                <option value="{{ jour }}">{{ jour }}</option>
-            {% endfor %}
-        </select>
-        {% endif %}
-        {% if billet.nomTypeBillet == '2 jours' %}
-        <select name="dateDebut" id="dateDebut">
-            {% for jour in duo_disponible %}
-                <option value="{{ jour }}">{{ jour }}</option>
-            {% endfor %}
-        {% endif %}
-        </select>
-        {% if billet.nomTypeBillet == 'Totalité du festival' %}
+        <h1>Acheter un billet</h1>
+        {% if billet == 'Journée' %}
+        <p>Vous avez choisi un billet journée</p>
+        <p>Voici les journées disponibles : </p>
+        {% for jour in jours_disponibles %}
+        <p>{{ jour }}</p>
+        {% endfor %}
         {% endif %}
         <label for="prix">Prix du billet :</label>
         <label for="quantite">Quantité :</label>

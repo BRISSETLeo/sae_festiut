@@ -5,14 +5,16 @@
 {% endblock %}
 {% block main %}
 <h2> {{ festival.nomFestival }} </h2>
-{% if current_user.is_authenticated and current_user.monRole == "Administrateur" %}
-    <a href="{{ url_for('ajouter_lieu') }}" class="">Ajouter un lieu</a>
-    <a href="{{ url_for('ajouter_event') }}" class="">Ajouter un évènement</a>
-    <a href="{{ url_for('ajouter_journee') }}" class="">Ajouter une journée</a>
-    <a href="{{ url_for('ajouter_artiste') }}" class="">Ajouter un artiste</a>
-    <a href="{{ url_for('ajouter_groupe') }}" class="">Ajouter un groupe</a>
-    <a href="{{ url_for('ajouter_logement') }}" class="">Ajouter un logement</a>
-{% endif %}
+<div>
+    {% if current_user.is_authenticated and current_user.monRole == "Administrateur" %}
+        <a href="{{ url_for('ajouter_lieu') }}" class="">Ajouter un lieu</a>
+        <a href="{{ url_for('ajouter_event') }}" class="">Ajouter un évènement</a>
+        <a href="{{ url_for('ajouter_journee') }}" class="">Ajouter une journée</a>
+        <a href="{{ url_for('ajouter_artiste') }}" class="">Ajouter un artiste</a>
+        <a href="{{ url_for('ajouter_groupe') }}" class="">Ajouter un groupe</a>
+        <a href="{{ url_for('ajouter_logement') }}" class="">Ajouter un logement</a>
+    {% endif %}
+</div>
 {% for event in events %}
 <p>{{ event.nomEvent }}</p>
 {% endfor %}

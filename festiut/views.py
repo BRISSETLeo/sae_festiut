@@ -7,7 +7,7 @@ from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from itertools import combinations
 from sqlalchemy.sql.expression import func
 
@@ -74,7 +74,7 @@ def logout ():
 
 @app.route("/billeterie/")
 def billeterie():
-    billets = Billet.query.all()
+    billets = TypeBillet.query.all()
     return render_template("billeterie.html",
                            billets=billets)
 
@@ -82,20 +82,46 @@ def billeterie():
 def string_filter(value):
     return str(value)
 
-@app.route("/info_billet/<int:idBillet>") 
-def info_billet(idBillet):
-    billet = Billet.query.filter_by(idBillet=idBillet).first()
+@app.route("/info_billet/<nomTypeBillet>") 
+def info_billet(nomTypeBillet):
     festival = Festival.query.first()
+    derniere_journee = Journee.query.with_entities(func.max(Journee.dateJournee)).scalar()
     
-    jours_disponibles = [festival.dateDebut + timedelta(n) for n in range((festival.dateFin - festival.dateDebut).days + 1)]
+    jours_disponibles = []
 
-    jours_disponibles_formates = [date.strftime('%A %d %B') for date in jours_disponibles]
+    date_actuelle = datetime.now().date()
+
+    resultats = (
+        db.session.query(
+            Journee.idJournee,
+            Journee.dateJournee,
+            func.min(Event.heureDebutEvent).label("heure_debut_min")
+        )
+        .outerjoin(Event, Event.journeeEvent == Journee.idJournee)
+        .group_by(Journee.idJournee, Journee.dateJournee)
+        .all()
+    )
+
+    jours_disponibles = []
+
+    # Maintenant, `resultats` contient les identifiants et les dates de journée avec les heures de début minimales correspondantes
+    for resultat in resultats:
+        id_journee = resultat.idJournee
+        date_journee = resultat.dateJournee
+        heure_debut_min = resultat.heure_debut_min if resultat.heure_debut_min is not None else time(0, 0)
+        
+        jours_disponibles.append(datetime.combine(date_journee, heure_debut_min))
+
+    import locale
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+
+    jours_disponibles_formates = [date.strftime('%A %d %B %Y %H:%M') for date in jours_disponibles]
 
     combinaisons_jours = list(combinations(jours_disponibles_formates, 2))
     combinaisons_successives = [comb for comb in combinaisons_jours if jours_disponibles_formates.index(comb[0]) == jours_disponibles_formates.index(comb[1]) - 1]
 
     return render_template("info_billet.html",
-                           billet=billet, jours_disponibles=jours_disponibles_formates, duo_disponible=combinaisons_successives)
+                           billet=nomTypeBillet, jours_disponibles=jours_disponibles_formates, duo_disponible=combinaisons_successives)
 
 @app.route("/programme")
 def programme():
@@ -115,33 +141,37 @@ def programme_jour(idJournee):
     
 @app.route("/acheter_billet/<int:idBillet>", methods =("GET","POST" ,))
 def acheter_billet(idBillet):
-    billet = Billet.query.filter_by(idBillet=idBillet).first()
+    billet = TypeBillet.query.filter_by(idBillet=idBillet).first()
     festival = Festival.query.first()
+    derniere_journee = Journee.query.with_entities(func.max(Journee.dateJournee)).scalar()
     if request.method == "POST":
-        if current_user.is_authenticated:
-            utilisateur_nom = current_user.nom
+        if derniere_journee != None:
+            if current_user.is_authenticated:
+                utilisateur_nom = current_user.nom
+            else:
+                return redirect(url_for('login'))
+            
+            if billet.nomTypeBillet == 'Journée':
+                dateDebut = request.form['dateDebut']
+                dateFin = dateDebut
+
+            elif billet.nomTypeBillet == 'Totalité du festival':
+                dateDebut = festival.dateDebut
+                dateFin = festival.dateFin
+
+            elif billet.nomTypeBillet == '2 jours':
+                dateDebut_str = request.form['dateDebut'][2:12]
+                dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%d')
+                dateFin = dateDebut + timedelta(days=1)
+
+            for _ in range(int(request.form['quantite'])):
+                Billet.acheter_billet(idBillet, utilisateur_nom, dateDebut, dateFin)
         else:
-            return redirect(url_for('login'))
-        
-        if billet.nomTypeBillet == 'Journée':
-            dateDebut = request.form['dateDebut']
-            dateFin = dateDebut
-
-        elif billet.nomTypeBillet == 'Totalité du festival':
-            dateDebut = festival.dateDebut
-            dateFin = festival.dateFin
-
-        elif billet.nomTypeBillet == '2 jours':
-            dateDebut_str = request.form['dateDebut'][2:12]
-            dateDebut = datetime.strptime(dateDebut_str, '%Y-%m-%d')
-            dateFin = dateDebut + timedelta(days=1)
-
-        for _ in range(int(request.form['quantite'])):
-            BilletAchete.acheter_billet(idBillet, utilisateur_nom, dateDebut, dateFin)
+            return redirect(url_for('erreur_programmation'))
 
         return redirect(url_for('home'))
     return render_template("acheter_billet.html", billet=billet)
-    
+
 @app.route("/admin/ajouter_evenement/")
 def ajouter_evenement():
     types_events = TypeEvent.query.all()
@@ -223,7 +253,7 @@ def add_event():
     if imageEvent:
         byte = imageEvent.read()
     
-    Event.enregistrer_nouvel_event(nomEvent=nomEvent, typeEvent=typeEvent, lieuEvent=lieuEvent, heureDebutEvent=heureDebutEvent, heureFinEvent=heureFinEvent, descriptionEvent=descriptionEvent, imageEvent=byte, estGratuit=estGratuit, journeeEvent=journeeEvent)
+    Event.enregistrer_nouvel_event(nomEvent=nomEvent, typeEvent=typeEvent, lieuEvent=lieuEvent, heureDebutEvent=heureDebutEvent, heureFinEvent=heureFinEvent, descriptionEvent=descriptionEvent, imageEvent=byte, estGratuit=estGratuit, journeeEvent=journeeEvent.idJournee)
 
     return redirect(url_for('home'))
 
@@ -234,14 +264,26 @@ def voir_tous_les_evenements():
 
 @app.route('/admin/ajouter_journee/')
 def ajouter_journee():
-    lieux = Lieu.query.all()
-    festival = Festival.query.first()
     journee = Journee.query.order_by(Journee.idJournee.desc()).first()
+
+    lieux = []
+
+    for lieu in Lieu.query.all():
+        if journee.lieuJournee != lieu.nomLieu:
+            lieux.append(lieu)
+
+    festival = Festival.query.first()
+
     if journee is None:
         journee = festival.dateDebutFestival
     else:
         journee = journee.dateJournee + timedelta(days=1)
     return render_template("ajouter_journee.html", lieux=lieux, journee=journee)
+
+
+@app.route('/erreur_programmation')
+def erreur_programmation():
+    return render_template('erreur_programmation.html')
 
 @app.route('/admin/add_journee/', methods=['POST'])
 def add_journee():

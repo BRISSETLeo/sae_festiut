@@ -10,15 +10,19 @@
         {% if billet == 'Journée' or billet == 'Totalité du festival' %}
         <p>Vous avez choisi un billet journée</p>
         <p>Voici les journées disponibles : </p>
-        {% for jour in jours_disponibles %}
-        <p>{{ jour }}</p>
-        {% endfor %}
+        <select>
+            {% for jour in jours_disponibles %}
+                <option value="{{ jour }}">{{ jour }}</option>
+            {% endfor %}
+        </select>
         {% elif billet == '2 jours' %}
         <p>Vous avez choisi un billet 2 jours</p>
         <p>Voici les journées disponibles : </p>
-        {% for jour in duo_disponible %}
-        <p>{{ jour }}</p>
-        {% endfor %}
+        <select>
+            {% for jour in duo_disponible %}
+                <option value="{{ jour }}">{{ jour }}</option>
+            {% endfor %}
+        </select>
         {% endif %}
         <label for="prix">Prix du billet :</label>
         <label for="quantite">Quantité :</label>

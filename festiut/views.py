@@ -100,7 +100,18 @@ def info_billet(idBillet):
 @app.route("/programme")
 def programme():
     events = Event.query.all()
-    return render_template("programme.html", events=events)
+    jours_festival = Journee.query.all()
+    groupes = Groupe.query.all()
+
+
+    return render_template('programme.html', jours_festival=jours_festival, events=events, groupes=groupes)
+
+@app.route("/programme_jour/<int:idJournee>")
+def programme_jour(idJournee):
+    journee = Journee.query.filter_by(idJournee=idJournee).first()
+    events = journee.eventsJournee
+    groupes = Groupe.query.all()
+    return render_template('programme_jour.html', journee=journee, events=events, groupes=groupes)
     
 @app.route("/acheter_billet/<int:idBillet>", methods =("GET","POST" ,))
 def acheter_billet(idBillet):

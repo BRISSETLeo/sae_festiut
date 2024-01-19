@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+{% block main %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/programme.css')}}">
+    <div class="barre-navigation">
+        {% for jour in jours_festival %}
+            <a href="{{ url_for('programme_jour', idJournee=jour.idJournee) }}">{{ jour.dateJournee.strftime('%A %d %B') }}</a>
+        {% endfor %} 
+    </div>
+    <div class="programme">
+        {% for jour in jours_festival %}
+            <div class="jour">
+                <h2>{{ jour.dateJournee.strftime('%A %d %B') }}</h2>
+                {% for evenement in jour.evenements %}
+                    <div class="evenement">
+                        <h3>{{ evenement.nomEvenement }}</h3>
+                        <p>{{ evenement.descriptionEvenement }}</p>
+                        <p>{{ evenement.heureDebut.strftime('%H:%M') }} - {{ evenement.heureFin.strftime('%H:%M') }}</p>
+                        <p>{{ evenement.lieu.nomLieu }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}   
+
+{% endblock %}

@@ -1,3 +1,4 @@
+from festiut.models import Journee
 from .app import app , db
 
 @app.cli. command()
@@ -54,7 +55,7 @@ def loaddb():
     db.session.add(StyleMusique(nomStyleMusique="Metal"))
     db.session.add(StyleMusique(nomStyleMusique="Variété"))
     db.session.add(StyleMusique(nomStyleMusique="Folk"))
-    
+
     db.session.commit()    
     
     

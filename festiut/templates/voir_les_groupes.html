@@ -5,7 +5,7 @@
 {% endblock %}
 {% block main %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/voir_les_lieux.css') }}">
-{% for lieu in lieux %}
+{% for groupe in groupes %}
 <div class="lieu">
     <h2>{{ groupe.nomGroupe }}</h2>
     <p>{{ groupe.styleGroupe }}</p>

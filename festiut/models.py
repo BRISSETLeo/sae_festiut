@@ -193,6 +193,25 @@ class LienArtiste(db.Model):
 
     def __repr__(self):
         return f"<LienArtiste {self.nomArtiste}: {self.idLien}>"
+    
+class TypeBillet (db.Model):
+    nomTypeBillet = db.Column(db.String(50), primary_key=True, nullable=False)
+    prixBillet = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<TypeBillet {self.nomTypeBillet}>"
+
+class Billet(db.Model):
+    idAchat = db.Column(db.Integer, primary_key=True, nullable=False)
+    typeBillet = db.Column(db.String(50), db.ForeignKey('type_billet.nomTypeBillet'), nullable=False)
+    nomUser = db.Column(db.String(25), db.ForeignKey('utilisateur.nom'), nullable=False)
+    nbPlaceBillet = db.Column(db.Integer, nullable=False)
+    dateAchat = db.Column(db.DateTime, nullable=False)
+    dateDebut = db.Column(db.DateTime, nullable=False)
+    dateFin = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"<Billet {self.idBillet}: {self.typeBillet}>"
 
 @login_manager.user_loader
 def load_user(nom):

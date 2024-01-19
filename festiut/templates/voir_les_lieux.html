@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/voir_les_lieux.css') }}">
+{% for lieu in lieux %}
+<div class="lieu">
+    <h2>{{ lieu.nomLieu }}</h2>
+    <p>{{ lieu.adresseLieu }}</p>
+    <p>{{ lieu.nbPlaceLieu }}</p>
+</div>
+{% endfor %}
+{% endblock %}

@@ -36,6 +36,11 @@ class Lieu(db.Model):
 
     journeesLieu = db.relationship('Journee', backref='lieu', lazy=True)
     eventsLieu = db.relationship('Event', backref='lieu', lazy=True)
+
+    def enregistrer_nouveau_lieu(nomLieu, adresseLieu, nbPlaceLieu):
+        lieu = Lieu(nomLieu=nomLieu, adresseLieu=adresseLieu, nbPlaceLieu=nbPlaceLieu)
+        db.session.add(lieu)
+        db.session.commit()
     
     def __repr__(self):
         return f"<Lieu {self.nomLieu}: {self.adresse} {self.ville} {self.codePostal}>"
@@ -62,11 +67,18 @@ class Event(db.Model):
     nomEvent = db.Column(db.String(50), nullable=False)
     typeEvent = db.Column(db.String(50), db.ForeignKey('type_event.nomTypeEvent'), nullable=False)
     lieuEvent = db.Column(db.String(50), db.ForeignKey('lieu.nomLieu'), nullable=False)
+    heureDebutEvent = db.Column(db.Time, nullable=False)
+    heureFinEvent = db.Column(db.Time, nullable=False)
     descriptionEvent = db.Column(db.String(500), nullable=False)
-    imageEventEvent = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
+    imageEvent = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
     estGratuit = db.Column(db.Boolean, nullable=False)
 
     journeeEvent = db.Column(db.Integer, db.ForeignKey('journee.idJournee'), nullable=False)
+
+    def enregistrer_nouvel_event(nomEvent, typeEvent, lieuEvent, heureDebutEvent, heureFinEvent, descriptionEvent, imageEvent, estGratuit, journeeEvent):
+        event = Event(nomEvent=nomEvent, typeEvent=typeEvent, lieuEvent=lieuEvent, heureDebutEvent=heureDebutEvent, heureFinEvent=heureFinEvent, descriptionEvent=descriptionEvent, imageEvent=imageEvent, estGratuit=estGratuit, journeeEvent=journeeEvent)
+        db.session.add(event)
+        db.session.commit()
 
     def __repr__(self):
         return f"<Event {self.nomEvent}: {self.descriptionEvent}>"

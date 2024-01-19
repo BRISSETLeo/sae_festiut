@@ -2,7 +2,7 @@ import base64
 from markupsafe import Markup
 from .app import app, login_manager
 from flask import render_template,request, redirect, url_for
-from .models import Utilisateur, save_user, Festival, db, TypeEvent, Event
+from .models import *
 from hashlib import sha256
 from flask_login import login_user, current_user, logout_user
 from flask_wtf import FlaskForm
@@ -177,6 +177,46 @@ def add_lieu():
     adresseLieu = request.form.get('adresseLieu')
     nbPlaceLieu = request.form.get('nbPlaceLieu')
     
-    #Lieu.enregistrer_nouveau_lieu(nom_lieu=nomLieu, adresse_lieu=adresseLieu, nb_place_lieu=nbPlaceLieu)
+    Lieu.enregistrer_nouveau_lieu(nomLieu=nomLieu, adresseLieu=adresseLieu, nbPlaceLieu=nbPlaceLieu)
 
     return redirect(url_for('home'))
+
+@app.route("/admin/voir_les_lieux/")
+def voir_les_lieux():
+    lieux = Lieu.query.all()
+    return render_template("voir_les_lieux.html", lieux=lieux)
+
+@app.route("/admin/ajouter_event/")
+def ajouter_event():
+    types_events = TypeEvent.query.all()
+    lieux = Lieu.query.filter(Lieu.journeesLieu.any()).all()
+    journees = Journee.query.all()
+    return render_template("ajouter_event.html", types=types_events, lieux=lieux, journees=journees)
+
+@app.route('/admin/add_event/', methods=['POST'])
+def add_event():
+    nomEvent = request.form.get('nomEvent')
+    typeEvent = request.form.get('typeEvent')
+    lieuEvent = request.form.get('lieuEvent')
+    heureDebutEvent = request.form.get('heureDebutEvent')
+    heureFinEvent = request.form.get('heureFinEvent')
+    descriptionEvent = request.form.get('descriptionEvent')
+    imageEvent = request.files.get('image')
+    estGratuit = request.form.get('estGratuit')
+    journeeEvent = Journee.query.filter_by(lieuJournee=lieuEvent).first()
+    
+    if(journeeEvent == None):
+        return redirect(url_for('ajouter_event'))
+
+    byte = None
+    if imageEvent:
+        byte = imageEvent.read()
+    
+    Event.enregistrer_nouvel_event(nomEvent=nomEvent, typeEvent=typeEvent, lieuEvent=lieuEvent, heureDebutEvent=heureDebutEvent, heureFinEvent=heureFinEvent, descriptionEvent=descriptionEvent, imageEvent=byte, estGratuit=estGratuit, journeeEvent=journeeEvent)
+
+    return redirect(url_for('home'))
+
+@app.route("/admin/voir_tous_les_evenements/")
+def voir_tous_les_evenements():
+    events = Event.query.all()
+    return render_template("voir_tous_les_evenements.html", events=events)

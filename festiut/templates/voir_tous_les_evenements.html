@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/voir_tous_les_evenements.css') }}">
+
+{% for event in events %}
+<div class="event">
+    {% if event.imageEvent %}
+    <img src="{{ url_for('static', filename='images/' + event.imageEvent) }}" alt="image de l'événement">
+    {% else %}
+    <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="image de l'événement">
+    {% endif %}
+    <h2>{{ event.nomEvent }}</h2>
+    <p>{{ event.typeEvent }}</p>
+    <p>{{ event.lieuEvent }}</p>
+    <p>{{ event.heureDebutEvent }}</p>
+    <p>{{ event.heureFinEvent }}</p>
+    <p>{{ event.descriptionEvent }}</p>
+    <p>{{ event.estGratuit }}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

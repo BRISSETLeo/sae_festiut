@@ -8,6 +8,7 @@
 {% if current_user.is_authenticated and current_user.monRole == "Administrateur" %}
     <a href="{{ url_for('ajouter_evenement') }}" class="">Ajouter un événement</a>
     <a href="{{ url_for('ajouter_lieu') }}" class="">Ajouter un lieu</a>
+    <a href="{{ url_for('ajouter_event') }}" class="">Ajouter un évènement</a>
 {% endif %}
 {% for event in events %}
 <p>{{ event.nomEvent }}</p>

@@ -87,7 +87,8 @@ def string_filter(value):
 def info_billet(nomTypeBillet):
     festival = Festival.query.first()
     derniere_journee = Journee.query.with_entities(func.max(Journee.dateJournee)).scalar()
-    
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     jours_disponibles = []
 
     date_actuelle = datetime.now().date()
@@ -105,7 +106,6 @@ def info_billet(nomTypeBillet):
 
     jours_disponibles = []
 
-    # Maintenant, `resultats` contient les identifiants et les dates de journée avec les heures de début minimales correspondantes
     for resultat in resultats:
         id_journee = resultat.idJournee
         date_journee = resultat.dateJournee
@@ -116,13 +116,15 @@ def info_billet(nomTypeBillet):
     import locale
     locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
 
-    jours_disponibles_formates = [date.strftime('%A %d %B %Y %H:%M') for date in jours_disponibles]
+    jours_disponibles_formates = [date.strftime('%A %d %B %H:%M') for date in jours_disponibles]
 
     combinaisons_jours = list(combinations(jours_disponibles_formates, 2))
     combinaisons_successives = [comb for comb in combinaisons_jours if jours_disponibles_formates.index(comb[0]) == jours_disponibles_formates.index(comb[1]) - 1]
+    combinaisons_successives_affcihe = [f"{comb[0]} - {comb[1]}" for comb in combinaisons_successives]
+
 
     return render_template("info_billet.html",
-                           billet=nomTypeBillet, jours_disponibles=jours_disponibles_formates, duo_disponible=combinaisons_successives)
+                           billet=nomTypeBillet, jours_disponibles=jours_disponibles_formates, duo_disponible=combinaisons_successives_affcihe)
 
 @app.route("/programme")
 def programme():
@@ -139,6 +141,16 @@ def programme_jour(idJournee):
     events = journee.eventsJournee
     groupes = Groupe.query.all()
     return render_template('programme_jour.html', journee=journee, events=events, groupes=groupes)
+
+@app.route("/mesBillets/")
+def mesBillets():
+    if current_user.is_authenticated:
+        utilisateur_nom = current_user.nom
+        billet = Billet.query.filter_by(nomUtilisateur=utilisateur_nom).all()
+    else:
+        return redirect(url_for('login'))
+    render_template("mesBillets.html", utilisateur_nom=utilisateur_nom, billet=billet)
+
     
 @app.route("/acheter_billet/<int:idBillet>", methods =("GET","POST" ,))
 def acheter_billet(idBillet):

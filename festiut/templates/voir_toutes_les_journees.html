@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/voir_tous_les_evenements.css') }}">
+
+{% for journee in journees %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ journee.nomFestivalJournee }}</h5>
+        <p class="card-text">{{ journee.dateJournee }}</p>
+        <p class="card-text">{{ journee.lieuJournee }}</p>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

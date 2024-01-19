@@ -7,7 +7,7 @@ def loaddb():
     print("Creating database tables...")
     db.create_all()
     
-    from .models import Role, Festival, Utilisateur, TypeEvent, TypeLien;
+    from .models import Role, Festival, Utilisateur, TypeEvent, TypeLien, StyleMusique;
         
     db.session.add(Role(nomRole="Utilisateur"))
     db.session.add(Role(nomRole="Administrateur"))
@@ -42,6 +42,18 @@ def loaddb():
 
     db.session.add(TypeLien(nomTypeLien="Vidéo"))
     db.session.add(TypeLien(nomTypeLien="Réseau"))
+
+    db.session.add(StyleMusique(nomStyleMusique="Rock"))
+    db.session.add(StyleMusique(nomStyleMusique="Pop"))
+    db.session.add(StyleMusique(nomStyleMusique="Rap"))
+    db.session.add(StyleMusique(nomStyleMusique="Classique"))
+    db.session.add(StyleMusique(nomStyleMusique="Jazz"))
+    db.session.add(StyleMusique(nomStyleMusique="Electro"))
+    db.session.add(StyleMusique(nomStyleMusique="Reggae"))
+    db.session.add(StyleMusique(nomStyleMusique="Country"))
+    db.session.add(StyleMusique(nomStyleMusique="Metal"))
+    db.session.add(StyleMusique(nomStyleMusique="Variété"))
+    db.session.add(StyleMusique(nomStyleMusique="Folk"))
     
     db.session.commit()    
     

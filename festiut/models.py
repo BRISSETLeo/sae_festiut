@@ -1,6 +1,5 @@
 from .app import db, login_manager
 from flask_login import UserMixin
-import datetime
 
 class Role(db.Model):
     nomRole = db.Column(db.String(25), primary_key=True, nullable=False)
@@ -93,21 +92,35 @@ class Event(db.Model):
     def __repr__(self):
         return f"<Event {self.nomEvent}: {self.descriptionEvent}>"
 
+class StyleMusique(db.Model):
+    nomStyleMusique = db.Column(db.String(50), primary_key=True, nullable=False)
+
+    def __repr__(self):
+        return f"<StyleMusique {self.nomStyleMusique}>"
+
 class Groupe(db.Model):
     nomGroupe = db.Column(db.String(50), primary_key=True, nullable=False)
-    styleGroupe = db.Column(db.String(50), nullable=False)
+    styleGroupe = db.Column(db.String(50), db.ForeignKey('style_musique.nomStyleMusique'), nullable=False)
     imageGroupe = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
 
-    artistesGroupe = db.relationship('Artiste', backref='groupe', lazy=True)
+    def ajouter_groupe(nomGroupe, styleGroupe, imageGroupe):
+        groupe = Groupe(nomGroupe=nomGroupe, styleGroupe=styleGroupe, imageGroupe=imageGroupe)
+        db.session.add(groupe)
+        db.session.commit()
 
     def __repr__(self):
         return f"<Groupe {self.nomGroupe}: {self.styleGroupe}>"
 
 class Artiste(db.Model):
     nomArtiste = db.Column(db.String(50), primary_key=True, nullable=False)
-    nomGroupeArtiste = db.Column(db.String(50), db.ForeignKey('groupe.nomGroupe'), nullable=True)
-    styleArtiste = db.Column(db.String(50), nullable=False)
+    groupeArtiste = db.Column(db.String(50), db.ForeignKey('groupe.nomGroupe'), nullable=True)
+    styleArtiste = db.Column(db.String(50), db.ForeignKey('style_musique.nomStyleMusique'), nullable=False)
     imageArtiste = db.Column(db.LargeBinary(length=(2**32)-1), nullable=True)
+
+    def enregistrer_nouvel_artiste(nomArtiste, groupeArtiste, styleArtiste, imageArtiste):
+        artiste = Artiste(nomArtiste=nomArtiste, groupeArtiste=groupeArtiste, styleArtiste=styleArtiste, imageArtiste=imageArtiste)
+        db.session.add(artiste)
+        db.session.commit()
 
     def __repr__(self):
         return f"<Artiste {self.nomArtiste}: {self.styleArtiste}>"

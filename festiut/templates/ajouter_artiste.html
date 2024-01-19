@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ajouter_artiste.css') }}">
+<form class="form-parent" action="{{ url_for('add_artiste') }}" method="POST" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label for="nomArtiste">Nom de l'artiste</label>
+        <input type="text" class="form-control" id="nomArtiste" name="nomArtiste" placeholder="Nom de l'artiste" required>
+    </div>
+    <div class="form-group">
+        <label for="groupeArtiste">Groupe de l'artiste</label>
+        <select name="groupeArtiste">
+            {% for g in groupes %}
+            <option value="{{ g.nomGroupe }}">{{ g.nomGroupe }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="styleArtiste">Style de l'artiste</label>
+        <select name="styleArtiste" required>
+            {% for s in styles %}
+            <option value="{{ s.nomStyleMusique }}">{{ s.nomStyleMusique }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="imageArtiste">Image de l'artiste</label>
+        <input type="file" class="form-control" id="imageArtiste" name="imageArtiste" placeholder="Image de l'artiste">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+
+</form>
+<a href="{{ url_for('voir_tous_les_artistes') }}">Voir tous les artistes</a>
+{% endblock %}
